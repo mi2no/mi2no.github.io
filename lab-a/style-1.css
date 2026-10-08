@@ -1,3 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap');
+
 body {
-  background-color: #dfecff;
+  background-color: black;
+  color: white;
+  font-family: "Space Grotesk", sans-serif;
+  background-image:
+    radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 5px),
+    radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 3px),
+    radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 10px),
+    radial-gradient(rgba(255,255,255,.4), rgba(255,255,255,.1) 2px, transparent 6px),
+    radial-gradient(circle at 50% 140%, orangered 40%, orange 40%, blue, transparent 80%);
+  background-size: 550px 550px, 350px 350px, 250px 250px, 150px 150px, 100% 100%;
+  background-position: 0 0, 40px 60px, 130px 270px, 70px 100px, 0 0;
+  background-repeat: repeat, repeat, repeat, repeat, no-repeat;
+  background-attachment: fixed, fixed, fixed, fixed, scroll;
+  padding: 100px;
+  font-size: 1.5em;
+  text-align: justify;
+}
+
+h1 {
+  text-align: center;
+  font-size: 3em;
+  padding-block: 20vh;
 }
