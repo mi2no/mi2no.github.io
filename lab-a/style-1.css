@@ -57,7 +57,7 @@ body > section::before {
   align-self: center;
   width: 100%;
   aspect-ratio: 1;
-  background: url("earth.png") center / contain no-repeat;
+  background: url("planets/earth.png") center / contain no-repeat;
 }
 
 body > section:nth-of-type(even) > * {
@@ -68,10 +68,10 @@ body > section:nth-of-type(even)::before {
   grid-column: 1;
 }
 
-/* #mercury::before { background-image: url("mercury.png"); } */
-/* #venus::before { background-image: url("venus.png"); } */
-/* #mars::before { background-image: url("mars.png"); } */
-/* #jupiter::before { background-image: url("jupiter.png"); } */
+#mercury::before { background-image: url("planets/mercury.png"); }
+#venus::before { background-image: url("planets/venus.png"); }
+#mars::before { background-image: url("planets/mars.png"); }
+#jupiter::before { background-image: url("planets/jupiter.png"); }
 
 #facts::before {
   content: none;
