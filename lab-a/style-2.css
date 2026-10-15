@@ -1,3 +1,263 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,300..700;1,8..60,300..700&display=swap');
+
+/* papier w kratkę, ciemny atrament, rdzawy akcent */
 body {
-  background-color: #ecfbe6;
+  margin: 0;
+  padding: 3rem;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  column-gap: 4rem;
+  row-gap: 3rem;
+
+  background-color: #f4ecdc;
+  background-image:
+    radial-gradient(ellipse at top left, rgba(255, 255, 255, .7), transparent 60%),
+    repeating-linear-gradient(0deg, transparent 0 39px, rgba(60, 40, 20, .07) 39px 40px),
+    repeating-linear-gradient(90deg, transparent 0 39px, rgba(60, 40, 20, .07) 39px 40px);
+  background-attachment: fixed;
+
+  color: #2b2118;
+  font-family: "Source Serif 4", Georgia, serif;
+  font-size: 1.15rem;
+  line-height: 1.7;
+  hyphens: auto;
+}
+
+a {
+  color: #a8431f;
+}
+
+/* header jako przyklejony panel boczny */
+body > header {
+  grid-column: 1;
+  grid-row: 1 / span 6;
+  align-self: start;
+  position: sticky;
+  top: 3rem;
+  box-sizing: border-box;
+  height: calc(100vh - 6rem);
+  padding: 2.5rem 2rem;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  color: #f4ecdc;
+  background-color: #1b2338;
+  background-image:
+    repeating-radial-gradient(circle at 120% 110%, transparent 0 38px, rgba(244, 236, 220, .12) 38px 39px),
+    linear-gradient(160deg, #24304d, #121726);
+  border-radius: 4px;
+  box-shadow: 10px 10px 0 #a8431f;
+}
+
+body > header > hgroup > h1 {
+  margin: 0;
+  font-family: "Playfair Display", serif;
+  font-size: 2.6rem;
+  font-weight: 900;
+  line-height: 1.05;
+  text-transform: uppercase;
+  letter-spacing: .02em;
+}
+
+body > header > hgroup > p {
+  margin: 1rem 0 0;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(244, 236, 220, .4);
+  font-family: "Playfair Display", serif;
+  font-style: italic;
+  font-size: 1.2rem;
+}
+
+body > header > nav > ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: nav;
+}
+
+body > header > nav li {
+  counter-increment: nav;
+  border-bottom: 1px dashed rgba(244, 236, 220, .3);
+}
+
+body > header > nav a {
+  display: block;
+  padding: .5rem 0;
+  color: #f4ecdc;
+  text-decoration: none;
+  font-variant: small-caps;
+  letter-spacing: .08em;
+  transition: padding-left .2s, color .2s;
+}
+
+body > header > nav a::before {
+  content: counter(nav, upper-roman) ". ";
+  display: inline-block;
+  width: 2.5em;
+  color: #e08a5c;
+}
+
+body > header > nav a:hover {
+  padding-left: .5rem;
+  color: #e08a5c;
+}
+
+/* sekcje jako karty atlasu */
+body > section {
+  grid-column: 2;
+  max-width: 900px;
+  padding: 2.5rem 3rem;
+  background-color: #fffaf0;
+  border: 1px solid #2b2118;
+  outline: 1px solid #2b2118;
+  outline-offset: -8px;
+  box-shadow: 8px 8px 0 rgba(43, 33, 24, .85);
+}
+
+/* planeta w okrągłym "okularze teleskopu", tekst opływa okrąg */
+body > section::before {
+  content: "";
+  float: left;
+  width: 260px;
+  aspect-ratio: 1;
+  margin: 0 2.5rem 1rem 0;
+  border-radius: 50%;
+  shape-outside: circle(50%);
+  background: #05070d url("planets/earth.png") center / cover no-repeat;
+  border: 6px double #2b2118;
+  box-shadow: 0 0 0 10px #fffaf0, 0 0 0 11px #2b2118;
+}
+
+#mercury::before { background-image: url("planets/mercury.png"); }
+#venus::before { background-image: url("planets/venus.png"); }
+#mars::before { background-image: url("planets/mars.png"); }
+#jupiter::before { background-image: url("planets/jupiter.png"); }
+
+body > section > h2 {
+  margin: 0 0 1rem;
+  font-family: "Playfair Display", serif;
+  font-size: 2.8rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+body > section > h3 {
+  clear: both;
+  margin: 2rem 0 .5rem;
+  padding-left: .8rem;
+  border-left: 4px solid #a8431f;
+  font-family: "Playfair Display", serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.5rem;
+}
+
+body > section > p {
+  margin: 0 0 1rem;
+  text-align: left;
+}
+
+/* inicjał na początku pierwszego akapitu */
+body > section > h2 + p::first-letter {
+  float: left;
+  margin: .1rem .5rem 0 0;
+  font-family: "Playfair Display", serif;
+  font-size: 4.2rem;
+  font-weight: 900;
+  line-height: .8;
+  color: #a8431f;
+}
+
+/* ciekawostki: numerowana lista bez obrazka */
+#facts::before {
+  content: none;
+}
+
+#facts > ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: fact;
+}
+
+#facts li {
+  counter-increment: fact;
+  position: relative;
+  padding: 1rem 0 1rem 4rem;
+  border-top: 1px dashed rgba(43, 33, 24, .4);
+}
+
+#facts li::before {
+  content: counter(fact, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: .7rem;
+  font-family: "Playfair Display", serif;
+  font-size: 2rem;
+  font-style: italic;
+  color: #a8431f;
+}
+
+body > footer {
+  grid-column: 1 / -1;
+  padding: 1.5rem;
+  text-align: center;
+  font-variant: small-caps;
+  letter-spacing: .1em;
+  border-top: 3px double #2b2118;
+}
+
+body > footer > p {
+  margin: .2rem 0;
+}
+
+@media (max-width: 768px) {
+  body {
+    display: block;
+    padding: 16px;
+    font-size: 1rem;
+  }
+
+  body > header {
+    position: static;
+    height: auto;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    box-shadow: 6px 6px 0 #a8431f;
+  }
+
+  body > header > hgroup > h1 {
+    font-size: 2rem;
+  }
+
+  body > header > nav {
+    margin-top: 1.5rem;
+  }
+
+  body > section {
+    margin-bottom: 2rem;
+    padding: 1.5rem 1.25rem;
+    box-shadow: 5px 5px 0 rgba(43, 33, 24, .85);
+  }
+
+  body > section::before {
+    float: none;
+    display: block;
+    width: 60%;
+    margin: .5rem auto 2rem;
+  }
+
+  body > section > h2 {
+    font-size: 2rem;
+  }
+
+  #facts li {
+    padding-left: 3rem;
+  }
+
+  #facts li::before {
+    font-size: 1.5rem;
+  }
 }
