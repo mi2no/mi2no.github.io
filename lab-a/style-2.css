@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,300..700;1,8..60,300..700&display=swap');
 
-/* papier w kratkę, ciemny atrament, rdzawy akcent */
 body {
   margin: 0;
   padding: 3rem;
@@ -27,7 +26,6 @@ a {
   color: #a8431f;
 }
 
-/* header jako przyklejony panel boczny */
 body > header {
   grid-column: 1;
   grid-row: 1 / span 6;
@@ -104,7 +102,6 @@ body > header > nav a:hover {
   color: #e08a5c;
 }
 
-/* sekcje jako karty atlasu */
 body > section {
   grid-column: 2;
   max-width: 900px;
@@ -116,7 +113,6 @@ body > section {
   box-shadow: 8px 8px 0 rgba(43, 33, 24, .85);
 }
 
-/* planeta w okrągłym "okularze teleskopu", tekst opływa okrąg */
 body > section::before {
   content: "";
   float: left;
@@ -159,7 +155,6 @@ body > section > p {
   text-align: left;
 }
 
-/* inicjał na początku pierwszego akapitu */
 body > section > h2 + p::first-letter {
   float: left;
   margin: .1rem .5rem 0 0;
@@ -170,7 +165,6 @@ body > section > h2 + p::first-letter {
   color: #a8431f;
 }
 
-/* ciekawostki: numerowana lista bez obrazka */
 #facts::before {
   content: none;
 }
