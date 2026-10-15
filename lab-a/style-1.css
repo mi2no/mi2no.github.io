@@ -13,15 +13,24 @@ body {
   background-position: 0 0, 40px 60px, 130px 270px, 70px 100px;
   background-repeat: repeat, repeat, repeat, repeat;
   background-attachment: fixed, fixed, fixed, fixed;
-  padding: 100px;
+  padding: 0;
+  padding-inline: 100px;
+  margin: 0;
   font-size: 1.5em;
   text-align: justify;
+}
+
+body > header {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 body > header > hgroup {
   text-align: center;
   font-size: 3rem;
-  padding-block: 20vh;
 }
 
 body > header > hgroup > p {
@@ -36,6 +45,11 @@ body > header > nav > ul {
   gap: 2rem;
   list-style: none;
   padding: 0;
+}
+
+body > header > nav > ul a {
+  color: white;
+  text-decoration: none;
 }
 
 body > section {
