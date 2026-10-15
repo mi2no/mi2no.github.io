@@ -16,8 +16,14 @@ body {
   padding: 0;
   padding-inline: 100px;
   margin: 0;
-  font-size: 1.5em;
+  font-size: 1.25em;
+  font-weight: 300;
+  line-height: 1.6;
   text-align: justify;
+}
+
+a {
+  color: #8fb4ff;
 }
 
 body > header {
@@ -26,6 +32,16 @@ body > header {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  position: relative;
+}
+
+body > header::before {
+  content: "";
+  position: absolute;
+  inset: 0 -100px;
+  z-index: -1;
+  background-image: repeating-radial-gradient(circle at center, transparent 0 69px, rgba(143, 180, 255, .18) 69px 70px);
+  mask-image: radial-gradient(circle at center, black 15%, transparent 65%);
 }
 
 body > header > hgroup {
@@ -33,8 +49,18 @@ body > header > hgroup {
   font-size: 3rem;
 }
 
+body > header > hgroup > h1 {
+  margin: 0;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .15em;
+}
+
 body > header > hgroup > p {
+  margin: 0;
+  font-size: 1.5rem;
   font-style: italic;
+  color: #aab4c8;
 }
 
 body > header > nav > ul {
@@ -43,13 +69,22 @@ body > header > nav > ul {
   flex-wrap: wrap;
   justify-content: center;
   gap: 2rem;
+  margin-top: 3rem;
+  padding: 1rem 0 0;
   list-style: none;
-  padding: 0;
+  border-top: 1px solid rgba(255, 255, 255, .3);
 }
 
 body > header > nav > ul a {
   color: white;
   text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  border-bottom: 1px solid transparent;
+}
+
+body > header > nav > ul a:hover {
+  border-bottom-color: white;
 }
 
 body > section {
@@ -82,6 +117,28 @@ body > section:nth-of-type(even)::before {
   grid-column: 1;
 }
 
+body > section > h2 {
+  margin: 0 0 1rem;
+  padding-bottom: .5rem;
+  font-size: 3rem;
+  font-weight: 700;
+  border-bottom: 1px solid rgba(255, 255, 255, .3);
+}
+
+body > section > h3 {
+  margin: 1.5rem 0 .5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: .2em;
+  color: #8fb4ff;
+}
+
+body > section > p {
+  margin: 0;
+  color: #d8dce6;
+}
+
 #mercury::before { background-image: url("planets/mercury.png"); }
 #venus::before { background-image: url("planets/venus.png"); }
 #mars::before { background-image: url("planets/mars.png"); }
@@ -95,14 +152,53 @@ body > section:nth-of-type(even)::before {
   grid-column: 1 / -1;
 }
 
+#facts > ul {
+  padding: 0;
+  list-style: none;
+}
+
+#facts li {
+  margin-bottom: 1.5rem;
+  padding-left: 1.5rem;
+  border-left: 2px solid #8fb4ff;
+  color: #d8dce6;
+}
+
+body > footer {
+  margin-top: 4rem;
+  padding: 2rem 0;
+  border-top: 1px solid rgba(255, 255, 255, .3);
+  text-align: center;
+  font-size: .9rem;
+  color: #aab4c8;
+}
+
+body > footer > p {
+  margin: .25rem 0;
+}
+
 @media (max-width: 768px) {
   body {
     padding: 16px;
     font-size: 1em;
+    text-align: left;
   }
 
   body > header > hgroup {
     font-size: 1.5rem;
+  }
+
+  body > header::before {
+    inset: 0 -16px;
+    background-image: repeating-radial-gradient(circle at center, transparent 0 39px, rgba(143, 180, 255, .18) 39px 40px);
+  }
+
+  body > header > nav > ul {
+    gap: 1rem;
+  }
+
+  body > section > h2 {
+    font-size: 2rem;
   }
 
   body > section {
