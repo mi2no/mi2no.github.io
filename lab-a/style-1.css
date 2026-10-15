@@ -19,8 +19,26 @@ body {
   text-align: justify;
 }
 
-h1 {
+body > hgroup {
   text-align: center;
-  font-size: 3em;
+  font-size: 3rem;
   padding-block: 20vh;
+}
+
+body > hgroup > p {
+  font-style: italic;
+}
+
+body > section {
+  display: flex;
+  flex-direction: column;
+}
+
+body > section > h2:before {
+  content: "";
+  aspect-ratio: 1;
+  width: 300px;
+  background: url("earth.png");
+  background-size: cover;
+  display: block;
 }
