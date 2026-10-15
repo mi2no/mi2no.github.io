@@ -1,3 +1,15 @@
+/*
+ * Styl 1 - "Kosmos"
+ *
+ * Zamysł i pierwotną implementację stylu zrealizowałem sam.
+ * Przy pracy korzystałem z pomocy AI (Claude, Anthropic): przebudowa układu sekcji
+ * na grid z planetą w ::before naprzemiennie po lewej/prawej, dopracowanie
+ * typografii i obramowań, dopasowanie orbit w nagłówku oraz odświeżenie gwiazd w tle.
+ *
+ * Grafiki planet wyrenderowałem we własnej implementacji raytracera;
+ * tekstury powierzchni planet pochodzą z repozytoriów NASA.
+ */
+
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap');
 
 body {
