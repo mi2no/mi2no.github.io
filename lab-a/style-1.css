@@ -8,37 +8,104 @@ body {
     radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 5px),
     radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 3px),
     radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 10px),
-    radial-gradient(rgba(255,255,255,.4), rgba(255,255,255,.1) 2px, transparent 6px),
-    radial-gradient(circle at 50% 140%, orangered 40%, orange 40%, blue, transparent 80%);
-  background-size: 550px 550px, 350px 350px, 250px 250px, 150px 150px, 100% 100%;
-  background-position: 0 0, 40px 60px, 130px 270px, 70px 100px, 0 0;
-  background-repeat: repeat, repeat, repeat, repeat, no-repeat;
-  background-attachment: fixed, fixed, fixed, fixed, scroll;
+    radial-gradient(rgba(255,255,255,.4), rgba(255,255,255,.1) 2px, transparent 6px);
+  background-size: 550px 550px, 350px 350px, 250px 250px, 150px 150px;
+  background-position: 0 0, 40px 60px, 130px 270px, 70px 100px;
+  background-repeat: repeat, repeat, repeat, repeat;
+  background-attachment: fixed, fixed, fixed, fixed;
   padding: 100px;
   font-size: 1.5em;
   text-align: justify;
 }
 
-body > hgroup {
+body > header > hgroup {
   text-align: center;
   font-size: 3rem;
   padding-block: 20vh;
 }
 
-body > hgroup > p {
+body > header > hgroup > p {
   font-style: italic;
 }
 
-body > section {
+body > header > nav > ul {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  list-style: none;
+  padding: 0;
 }
 
-body > section > h2:before {
+body > section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 4rem;
+  align-content: center;
+  min-height: 100vh;
+}
+
+body > section > * {
+  grid-column: 1;
+}
+
+body > section::before {
   content: "";
+  grid-column: 2;
+  grid-row: 1 / span 4;
+  align-self: center;
+  width: 100%;
   aspect-ratio: 1;
-  width: 300px;
-  background: url("earth.png");
-  background-size: cover;
-  display: block;
+  background: url("earth.png") center / contain no-repeat;
+}
+
+body > section:nth-of-type(even) > * {
+  grid-column: 2;
+}
+
+body > section:nth-of-type(even)::before {
+  grid-column: 1;
+}
+
+/* #mercury::before { background-image: url("mercury.png"); } */
+/* #venus::before { background-image: url("venus.png"); } */
+/* #mars::before { background-image: url("mars.png"); } */
+/* #jupiter::before { background-image: url("jupiter.png"); } */
+
+#facts::before {
+  content: none;
+}
+
+#facts > * {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 16px;
+    font-size: 1em;
+  }
+
+  body > header > hgroup {
+    font-size: 1.5rem;
+  }
+
+  body > section {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  body > section > *,
+  body > section::before,
+  body > section:nth-of-type(even) > *,
+  body > section:nth-of-type(even)::before {
+    grid-column: 1;
+  }
+
+  body > section::before {
+    grid-row: auto;
+    width: 60%;
+    justify-self: center;
+  }
 }
