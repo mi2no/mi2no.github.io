@@ -4,20 +4,6 @@ class Task {
     this.due = due;
   }
 
-  static click(event) {
-    const form = document.createElement("form");
-    const nameInput = document.createElement("input");
-    const dateInput = document.createElement("input");
-
-    nameInput.type = "text";
-    dateInput.type = "date";
-
-    form.append(nameInput, dateInput);
-
-    event.target.replaceChildren(form);
-    console.log("clicked");
-  }
-
   toListItem() {
     const item = document.createElement("li");
     const nameElement = document.createElement("span");
@@ -28,9 +14,34 @@ class Task {
 
     item.append(nameElement, dueElement);
 
-    item.onclick = Task.click;
+    item.onclick = event => this.click(event);
 
     return item;
+  }
+
+  click(event) {
+    const form = document.createElement("form");
+    const nameInput = document.createElement("input");
+    const dateInput = document.createElement("input");
+    const submitInput = document.createElement("input");
+
+    nameInput.type = "text";
+    dateInput.type = "date";
+    submitInput.type = "submit";
+
+    form.append(nameInput, dateInput, submitInput);
+
+    form.onsubmit = e => {
+      e.preventDefault();
+
+      this.name = nameInput.value;
+      this.due = dateInput.value;
+
+      event.target.childNodes[0].innerText = this.name;
+      event.target.childNodes[1].innerText = this.due;
+    };
+
+    event.target.replaceChildren(form);
   }
 }
 
@@ -65,8 +76,11 @@ class TODO {
       const text = event.target.value;
 
       if (text.length >= 2) {
-        const filtered = this.tasks.filter(t => t.name.includes(text));
-        this.draw(filtered);
+        //const filtered = this.tasks.filter(t => t.name.includes(text));
+        //this.draw(filtered);
+        //for (item of visualList) {
+        //  if (item.
+        //}
       }
       else if (this.visualList.childElementCount < this.tasks.length) this.draw();
     });
