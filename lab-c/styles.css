@@ -13,3 +13,8 @@ body {
     height: 150px;
     border: 1px solid black;
 }
+
+#puzzleContainer {
+    display: grid;
+    grid-template-columns: 4;
+}
