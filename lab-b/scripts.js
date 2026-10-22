@@ -4,6 +4,20 @@ class Task {
     this.due = due;
   }
 
+  static click(event) {
+    const form = document.createElement("form");
+    const nameInput = document.createElement("input");
+    const dateInput = document.createElement("input");
+
+    nameInput.type = "text";
+    dateInput.type = "date";
+
+    form.append(nameInput, dateInput);
+
+    event.target.replaceChildren(form);
+    console.log("clicked");
+  }
+
   toListItem() {
     const item = document.createElement("li");
     const nameElement = document.createElement("span");
@@ -12,8 +26,9 @@ class Task {
     nameElement.textContent = this.name;
     dueElement.textContent = this.due.toString();
 
-    item.appendChild(nameElement);
-    item.appendChild(dueElement);
+    item.append(nameElement, dueElement);
+
+    item.onclick = Task.click;
 
     return item;
   }
