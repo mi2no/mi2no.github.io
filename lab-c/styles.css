@@ -1,3 +1,15 @@
 body {
   background-color: #e6f1fc;
 }
+
+#map {
+    width: 600px;
+    height: 300px;
+    border: 1px solid black;
+}
+
+#rasterMap {
+    width: 300px;
+    height: 150px;
+    border: 1px solid black;
+}
