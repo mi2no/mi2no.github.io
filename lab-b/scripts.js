@@ -50,7 +50,7 @@ class TODO {
       const text = event.target.value;
 
       if (text.length >= 2) {
-        const filtered = this.tasks.filter(t => t.name.startsWith(text));
+        const filtered = this.tasks.filter(t => t.name.includes(text));
         this.draw(filtered);
       }
       else if (this.visualList.childElementCount < this.tasks.length) this.draw();
