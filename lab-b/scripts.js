@@ -1,6 +1,4 @@
-console.debug("Hello world!");
-
-class task {
+class Task {
   constructor(name, due) {
     this.name = name;
     this.due = due;
@@ -21,26 +19,43 @@ class task {
   }
 }
 
-const tasks = [];
-const visualList = document.querySelector("#TODO ul");
-const newTaskForm = document.querySelector("#TODO #newTask");
+class TODO {
+  draw(list = this.tasks) {
+    this.visualList.replaceChildren(
+      ...list.map(t => t.toListItem())
+    );
+  }
 
-function draw() {
-  visualList.replaceChildren(
-    ...tasks.map(t => t.toListItem())
-  );
+  addTask(task) {
+    this.tasks.push(task);
+    this.draw();
+  }
+
+  constructor() {
+    this.tasks = [];
+    this.visualList = document.querySelector("#TODO ul");
+    this.newTaskForm = document.querySelector("#TODO #newTask");
+    this.searchInput = document.querySelector("#TODO #search input");
+
+    this.newTaskForm.addEventListener("submit", event => {
+      event.preventDefault();
+
+      const name = this.newTaskForm.elements["name"].value;
+      const due = this.newTaskForm.elements["due"].value;
+
+      this.addTask(new Task(name, due));
+    });
+
+    this.searchInput.addEventListener("input", event => {
+      const text = event.target.value;
+
+      if (text.length >= 2) {
+        const filtered = this.tasks.filter(t => t.name.startsWith(text));
+        this.draw(filtered);
+      }
+      else if (this.visualList.childElementCount < this.tasks.length) this.draw();
+    });
+  }
 }
 
-function addTask(task) {
-  tasks.push(task);
-  draw();
-}
-
-newTaskForm.addEventListener("submit", function(event) {
-  event.preventDefault();
-
-  const name = newTaskForm.elements["name"].value;
-  const due = newTaskForm.elements["due"].value;
-
-  addTask(new task(name, due));
-});
+const todo = new TODO();
