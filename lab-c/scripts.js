@@ -29,7 +29,7 @@ document.getElementById("saveButton").addEventListener("click", function() {
         let rasterMap = document.getElementById("rasterMap");
         let rasterContext = rasterMap.getContext("2d");
 
-        const puzzles = splitCanvas(map, 4, 4);
+        const puzzles = splitCanvas(canvas, 4, 4);
         puzzles.map(p => {
             const canvas = document.createElement("canvas");
 
