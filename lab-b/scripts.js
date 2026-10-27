@@ -5,8 +5,8 @@ class Task {
   }
 
   toListItem() {
-    const item = document.createElement("li");
-    const nameElement = document.createElement("span");
+    const item = document.createElement("div");
+    const nameElement = document.createElement("div");
     const dueElement = document.createElement("span");
 
     nameElement.textContent = this.name;
@@ -15,11 +15,13 @@ class Task {
     item.append(nameElement, dueElement);
 
     item.onclick = event => this.click(event);
+    item.onfocusout = null;
 
     return item;
   }
 
   click(event) {
+    console.log(event.target);
     const form = document.createElement("form");
     const nameInput = document.createElement("input");
     const dateInput = document.createElement("input");
@@ -29,7 +31,12 @@ class Task {
     dateInput.type = "date";
     submitInput.type = "submit";
 
+    nameInput.defaultValue = this.name;
+    dateInput.defaultValue = this.due;
+
     form.append(nameInput, dateInput, submitInput);
+
+    const li = event.currentTarget;
 
     form.onsubmit = e => {
       e.preventDefault();
@@ -37,18 +44,48 @@ class Task {
       this.name = nameInput.value;
       this.due = dateInput.value;
 
-      event.target.childNodes[0].innerText = this.name;
-      event.target.childNodes[1].innerText = this.due;
+      document.onpointerdown = null;
+      li.replaceWith(this.toListItem());
     };
 
-    event.target.replaceChildren(form);
+    li.replaceChildren(form);
+
+    li.onclick = null;
+
+    document.onpointerdown = pointerEvent => {
+      if (li.contains(pointerEvent.target)) return;
+
+      this.name = nameInput.value;
+      this.due = dateInput.value;
+
+      document.onpointerdown = null;
+      li.replaceWith(this.toListItem());
+    };
   }
 }
 
 class TODO {
+  createListItem(task) {
+    const item = document.createElement("li");
+
+    const taskElement = task.toListItem();
+    const removeButton = document.createElement("button");
+
+    removeButton.onclick = event => {
+      const index = this.tasks.indexOf(task);
+
+      this.tasks.splice(index, 1);
+      this.visualList.removeChild(this.visualList.children[index]);
+    };
+
+    item.append(taskElement, removeButton);
+
+    return item;
+  }
+
   draw(list = this.tasks) {
     this.visualList.replaceChildren(
-      ...list.map(t => t.toListItem())
+      ...list.map(t => this.createListItem(t))
     );
   }
 
@@ -73,16 +110,56 @@ class TODO {
     });
 
     this.searchInput.addEventListener("input", event => {
-      const text = event.target.value;
+      const query = event.target.value;
 
-      if (text.length >= 2) {
-        //const filtered = this.tasks.filter(t => t.name.includes(text));
-        //this.draw(filtered);
-        //for (item of visualList) {
-        //  if (item.
-        //}
+      /*
+       * Zmieniam widoczność elementów zamiast wywoływać draw().
+       * Dzięki temu nie tworzę nowych elementów reprezentujących
+       * zadania przy każdym wyszukaniu.
+       */
+
+      if (query.length >= 2) {
+        for (const [i, task] of this.tasks.entries()) {
+          let li = this.visualList.childNodes[i];
+
+          /*if (li.childNodes[0].nodeName == "FORM") {
+            li.replaceWith(task.toListItem());
+            li = this.visualList.childNodes[i];
+          }*/
+
+          const nameContainer = li.childNodes[0];
+          const index = task.name.indexOf(query);
+
+          if (index == -1) {
+            li.hidden = true;
+            continue;
+          }
+
+          li.hidden = false;
+
+          const before = task.name.slice(0, index);
+          const match = task.name.slice(index, index + query.length);
+          const after = task.name.slice(index + query.length);
+
+          nameContainer.replaceChildren();
+
+          if (before) nameContainer.append(document.createTextNode(before));
+
+          const mark = document.createElement("mark");
+          mark.textContent = match;
+          nameContainer.append(mark);
+
+          if (after) nameContainer.append(document.createTextNode(after));
+        }
       }
-      else if (this.visualList.childElementCount < this.tasks.length) this.draw();
+      else /*if (this.visualList.childElementCount < this.tasks.length)*/ {
+        for (const [i, task] of this.tasks.entries()) {
+          const li = this.visualList.childNodes[i];
+
+          li.hidden = false;
+          li.childNodes[0].innerHTML = task.name;
+        }
+      }
     });
   }
 }
