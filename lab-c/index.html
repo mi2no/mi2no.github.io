@@ -14,14 +14,16 @@
     <script src="scripts.js" defer></script>
 </head>
 <body>
-    <div id="map"></div>
+    <div id="upper">
+        <div id="map"></div>
+        <div id="puzzle"></div>
+    </div>
 
-    <button id="getLocation">Get Current Location</button>
-    <button id="saveButton">Save Raster Map</button>
-    <br>
+    <div>
+        <button id="getLocation">Get Current Location</button>
+        <button id="saveButton">Save Raster Map</button>
+    </div>
 
-    <div id="puzzleContainer"></div>
-
-    <canvas id="rasterMap" width="300" height="150"></canvas>
+    <div id="piecesContainer"></div>
 </body>
 </html>

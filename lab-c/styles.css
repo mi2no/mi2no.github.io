@@ -1,9 +1,29 @@
+:root {
+    --catppuccin-frappe-crust: #232634;
+    --catppuccin-frappe-base: #303446;
+    --catppuccin-frappe-surface0: #414559;
+}
+
+* {
+    box-sizing: border-box;
+}
+
 body {
-  background-color: #e6f1fc;
+    background-color: var(--catppuccin-frappe-base);
+
+    margin: 0;
+    height: 100vh;
+
+    display: grid;
+    grid-template-rows: auto 100px minmax(0, 1fr);
+}
+
+#upper {
+    display: grid;
+    grid-template-columns: auto auto;
 }
 
 #map {
-    width: 600px;
     height: 300px;
     border: 1px solid black;
 }
@@ -14,7 +34,18 @@ body {
     border: 1px solid black;
 }
 
-#puzzleContainer {
+#piecesContainer {
+    min-height: 0;
     display: grid;
-    grid-template-columns: 4;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    max-width: 800px;
+    margin-inline: auto;
+
+    padding: 20px;
+
+    background-color: var(--catppuccin-frappe-surface0)
 }

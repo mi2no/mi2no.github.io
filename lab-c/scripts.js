@@ -21,15 +21,13 @@ L.tileLayer.provider('Esri.WorldImagery').addTo(map);
 let marker = L.marker([53.430127, 14.564802]).addTo(map);
 marker.bindPopup("<strong>Hello!</strong><br>This is a popup.");
 
-const puzzleContainer = document.getElementById("puzzleContainer");
+const piecesContainer = document.getElementById("piecesContainer");
 
 document.getElementById("saveButton").addEventListener("click", function() {
     leafletImage(map, function (err, canvas) {
-        // here we have the canvas
-        let rasterMap = document.getElementById("rasterMap");
-        let rasterContext = rasterMap.getContext("2d");
-
         const puzzles = splitCanvas(canvas, 4, 4);
+
+        piecesContainer.replaceChildren();
         puzzles.map(p => {
             const canvas = document.createElement("canvas");
 
@@ -38,11 +36,8 @@ document.getElementById("saveButton").addEventListener("click", function() {
 
             canvas.getContext("2d").putImageData(p, 0, 0);
 
-            puzzleContainer.append(canvas);
+            piecesContainer.append(canvas);
         });
-
-
-        rasterContext.drawImage(canvas, 0, 0, 300, 150);
     });
 });
 
