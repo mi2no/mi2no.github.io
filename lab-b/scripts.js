@@ -188,12 +188,7 @@ class TODO {
 
       if (query.length >= 2) {
         for (const [i, task] of this.tasks.entries()) {
-          let li = this.visualList.childNodes[i];
-
-          /*if (li.childNodes[0].nodeName == "FORM") {
-            li.replaceWith(task.toListItem());
-            li = this.visualList.childNodes[i];
-          }*/
+          const li = this.visualList.childNodes[i];
 
           const nameContainer = li.childNodes[0].childNodes[0];
           const index = task.name.indexOf(query);
@@ -220,7 +215,7 @@ class TODO {
           if (after) nameContainer.append(document.createTextNode(after));
         }
       }
-      else /*if (this.visualList.childElementCount < this.tasks.length)*/ {
+      else {
         for (const [i, task] of this.tasks.entries()) {
           const li = this.visualList.childNodes[i];
 

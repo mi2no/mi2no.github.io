@@ -1,3 +1,7 @@
+/*
+ * Styl wygenerowałem w całości przy użyciu ChatGPT.
+ */
+
 :root {
     color-scheme: dark;
 
@@ -11,6 +15,8 @@
     --accent-hover: #babbf1;
     --red: #e78284;
     --border: #51576d;
+
+    /*To kolory z catppuccina (frappe)*/
 
     font-family: system-ui, sans-serif;
     color: var(--text);
