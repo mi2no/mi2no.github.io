@@ -14,53 +14,7 @@ class Task {
 
     item.append(nameElement, dueElement);
 
-    item.onclick = event => this.click(event);
-    item.onfocusout = null;
-
     return item;
-  }
-
-  click(event) {
-    console.log(event.target);
-    const form = document.createElement("form");
-    const nameInput = document.createElement("input");
-    const dateInput = document.createElement("input");
-    const submitInput = document.createElement("input");
-
-    nameInput.type = "text";
-    dateInput.type = "date";
-    submitInput.type = "submit";
-
-    nameInput.defaultValue = this.name;
-    dateInput.defaultValue = this.due;
-
-    form.append(nameInput, dateInput, submitInput);
-
-    const li = event.currentTarget;
-
-    form.onsubmit = e => {
-      e.preventDefault();
-
-      this.name = nameInput.value;
-      this.due = dateInput.value;
-
-      document.onpointerdown = null;
-      li.replaceWith(this.toListItem());
-    };
-
-    li.replaceChildren(form);
-
-    li.onclick = null;
-
-    document.onpointerdown = pointerEvent => {
-      if (li.contains(pointerEvent.target)) return;
-
-      this.name = nameInput.value;
-      this.due = dateInput.value;
-
-      document.onpointerdown = null;
-      li.replaceWith(this.toListItem());
-    };
   }
 }
 
@@ -81,7 +35,88 @@ class TODO {
 
     item.append(taskElement, removeButton);
 
+    item.onclick = event => this.click(task, event);
+    item.onfocusout = null;
+
     return item;
+  }
+
+  dateValidity(dateString) {
+      const date = dateString ? new Date(`${dateString}T00:00:00`) : null;
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      return date === null || date > today;
+  }
+
+  click(task, event) {
+    console.log(event.target);
+    const form = document.createElement("form");
+    const nameInput = document.createElement("input");
+    const dateInput = document.createElement("input");
+    const submitInput = document.createElement("input");
+
+    nameInput.type = "text";
+    nameInput.minLength = 3;
+    nameInput.maxLength = 255;
+    nameInput.placeholder = "Enter name";
+    nameInput.required = true;
+
+    dateInput.type = "date";
+    submitInput.type = "submit";
+
+    nameInput.defaultValue = task.name;
+    dateInput.defaultValue = task.due;
+
+    form.append(nameInput, dateInput, submitInput);
+
+    const li = event.currentTarget;
+
+    form.onsubmit = e => {
+      e.preventDefault();
+
+      if (!this.dateValidity(dateInput.value)) {
+        alert("Termin musi być pusty lub przypadać w przyszłości");
+        return;
+      }
+
+      task.name = nameInput.value;
+      task.due = dateInput.value;
+
+      li.onclick = event => this.click(task, event);
+      document.onpointerdown = null;
+
+      li.childNodes[0].replaceWith(task.toListItem());
+
+      this.saveTasks();
+    };
+
+    li.childNodes[0].replaceWith(form);
+
+    li.onclick = null;
+
+    document.onpointerdown = pointerEvent => {
+      if (li.contains(pointerEvent.target)) return;
+
+      if (!form.reportValidity()) {
+        alert("Nieprawidłowy format nazwy.");
+        return;
+      }
+
+      if (!this.dateValidity(dateInput.value)) {
+        alert("Termin musi być pusty lub przypadać w przyszłości");
+        return;
+      }
+
+      task.name = nameInput.value;
+      task.due = dateInput.value;
+
+      document.onpointerdown = null;
+      li.childNodes[0].replaceWith(task.toListItem());
+
+      this.saveTasks();
+    };
   }
 
   draw(list = this.tasks) {
@@ -123,18 +158,18 @@ class TODO {
       const name = this.newTaskForm.elements["name"].value;
 
       const due = this.newTaskForm.elements["due"].value;
-      const dueDate = due ? new Date(`${due}T00:00:00`) : null;
 
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-
-      if (dueDate && dueDate <= today) {
+      if (!this.dateValidity(due)) {
         alert("Termin musi być pusty lub przypadać w przyszłości");
         return;
       }
 
       this.addTask(new Task(name, due));
     });
+
+    this.searchInput.onkeydown = event => {
+      if (event.key == "Enter") event.preventDefault();
+    };
 
     this.searchInput.addEventListener("input", event => {
       const query = event.target.value;
@@ -154,7 +189,7 @@ class TODO {
             li = this.visualList.childNodes[i];
           }*/
 
-          const nameContainer = li.childNodes[0];
+          const nameContainer = li.childNodes[0].childNodes[0];
           const index = task.name.indexOf(query);
 
           if (index == -1) {
@@ -184,7 +219,7 @@ class TODO {
           const li = this.visualList.childNodes[i];
 
           li.hidden = false;
-          li.childNodes[0].innerHTML = task.name;
+          li.childNodes[0].childNodes[0].innerHTML = task.name;
         }
       }
     });
