@@ -76,6 +76,7 @@ class TODO {
 
       this.tasks.splice(index, 1);
       this.visualList.removeChild(this.visualList.children[index]);
+      this.saveTasks();
     };
 
     item.append(taskElement, removeButton);
@@ -91,11 +92,27 @@ class TODO {
 
   addTask(task) {
     this.tasks.push(task);
+    this.saveTasks();
+
     this.draw();
   }
 
+  saveTasks() {
+    localStorage.setItem("tasks", JSON.stringify(this.tasks));
+  }
+
+  loadTasks() {
+    const json = localStorage.getItem("tasks");
+
+    if (!json) return [];
+
+    return JSON.parse(json).map(
+      task => new Task(task.name, task.due)
+    );
+  }
+
   constructor() {
-    this.tasks = [];
+    this.tasks = this.loadTasks();
     this.visualList = document.querySelector("#TODO ul");
     this.newTaskForm = document.querySelector("#TODO #newTask");
     this.searchInput = document.querySelector("#TODO #search input");
@@ -171,6 +188,8 @@ class TODO {
         }
       }
     });
+
+    this.draw();
   }
 }
 
