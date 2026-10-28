@@ -1,0 +1,260 @@
+/*
+ * Styl wygenerowałem w całości przy użyciu ChatGPT.
+ */
+
+:root {
+    color-scheme: dark;
+
+    --base: #303446;
+    --mantle: #292c3c;
+    --surface: #414559;
+    --overlay: #51576d;
+    --text: #c6d0f5;
+    --subtext: #a5adce;
+    --accent: #8caaee;
+    --accent-hover: #babbf1;
+    --red: #e78284;
+    --border: #51576d;
+
+    /*To kolory z catppuccina (frappe)*/
+
+    font-family: system-ui, sans-serif;
+    color: var(--text);
+    background: var(--base);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+}
+
+#TODO {
+    width: min(100%, 640px);
+    height: min(720px, calc(100vh - 48px));
+    min-height: 300px;
+
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+
+    background: var(--mantle);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+
+    box-shadow: 0 16px 48px #0003;
+}
+
+/* Search */
+
+#TODO header {
+    padding: 20px;
+    border-bottom: 1px solid var(--border);
+}
+
+#search {
+    margin: 0;
+}
+
+#search input {
+    width: 100%;
+}
+
+/* Task list */
+
+#TODO ul {
+    list-style: none;
+    margin: 0;
+    padding: 12px;
+    overflow-y: auto;
+    min-height: 0;
+}
+
+#TODO li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+
+    padding: 14px 16px;
+    margin-bottom: 8px;
+
+    background: var(--base);
+    border: 1px solid transparent;
+    border-radius: 10px;
+
+    transition:
+        background 150ms ease,
+        border-color 150ms ease;
+}
+
+#TODO li:hover {
+    background: var(--surface);
+    border-color: var(--border);
+}
+
+#TODO li > div {
+    min-width: 0;
+    flex: 1;
+    overflow-wrap: anywhere;
+}
+
+#TODO li > div > div {
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+#TODO li > div > span {
+    display: block;
+    margin-top: 4px;
+    color: var(--subtext);
+    font-size: 12px;
+}
+
+/* Search highlighting */
+
+mark {
+    color: var(--base);
+    background: var(--accent);
+    border-radius: 3px;
+    padding: 0 2px;
+}
+
+/* Add task */
+
+#TODO footer {
+    padding: 20px;
+    border-top: 1px solid var(--border);
+    background: var(--mantle);
+}
+
+#newTask {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 8px;
+    margin: 0;
+}
+
+/* Inputs and buttons */
+
+input {
+    min-width: 0;
+    font: inherit;
+    color: var(--text);
+    background: var(--base);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    outline: none;
+}
+
+input::placeholder {
+    color: var(--subtext);
+}
+
+input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px #8caaee33;
+}
+
+input[type="date"] {
+    width: 155px;
+}
+
+input[type="submit"] {
+    cursor: pointer;
+    color: var(--base);
+    background: var(--accent);
+    border-color: var(--accent);
+    font-weight: 600;
+    transition: background 150ms ease;
+}
+
+input[type="submit"]:hover {
+    background: var(--accent-hover);
+}
+
+/* Remove buttons created by JavaScript */
+
+#TODO li button {
+    flex-shrink: 0;
+    cursor: pointer;
+    width: 34px;
+    height: 34px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    color: var(--red);
+    background: transparent;
+    font: inherit;
+    transition: background 150ms ease;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#TODO li button:hover {
+    background: #e7828420;
+    border-color: #e7828440;
+}
+
+/* Editing an existing task */
+
+#TODO li form {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 8px;
+    width: 100%;
+}
+
+#TODO li form input[type="date"] {
+    width: 155px;
+}
+
+#TODO li form input[type="submit"] {
+    padding-inline: 14px;
+}
+
+/* Hidden tasks must remain hidden */
+
+#TODO li[hidden] {
+    display: none;
+}
+
+/* Small screens */
+
+@media (max-width: 520px) {
+    body {
+        padding: 12px;
+    }
+
+    #TODO {
+        height: calc(100vh - 24px);
+    }
+
+    #TODO header,
+    #TODO footer {
+        padding: 12px;
+    }
+
+    #newTask,
+    #TODO li form {
+        grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    #newTask input[name="name"],
+    #TODO li form input[type="text"] {
+        grid-column: 1 / -1;
+    }
+
+    input[type="date"],
+    #TODO li form input[type="date"] {
+        width: 100%;
+    }
+}
