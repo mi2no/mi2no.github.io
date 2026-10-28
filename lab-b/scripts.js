@@ -33,10 +33,11 @@ class TODO {
       this.saveTasks();
     };
 
+    removeButton.innerHTML = '<span class="material-symbols-outlined">delete</span>';
+
     item.append(taskElement, removeButton);
 
     item.onclick = event => this.click(task, event);
-    item.onfocusout = null;
 
     return item;
   }
@@ -112,7 +113,9 @@ class TODO {
       task.name = nameInput.value;
       task.due = dateInput.value;
 
+      li.onclick = event => this.click(task, event);
       document.onpointerdown = null;
+
       li.childNodes[0].replaceWith(task.toListItem());
 
       this.saveTasks();
@@ -150,7 +153,7 @@ class TODO {
     this.tasks = this.loadTasks();
     this.visualList = document.querySelector("#TODO ul");
     this.newTaskForm = document.querySelector("#TODO #newTask");
-    this.searchInput = document.querySelector("#TODO #search input");
+    this.searchInput = document.querySelector("#TODO #searchForm input");
 
     this.newTaskForm.addEventListener("submit", event => {
       event.preventDefault();
