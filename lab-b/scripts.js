@@ -104,7 +104,17 @@ class TODO {
       event.preventDefault();
 
       const name = this.newTaskForm.elements["name"].value;
+
       const due = this.newTaskForm.elements["due"].value;
+      const dueDate = due ? new Date(`${due}T00:00:00`) : null;
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      if (dueDate && dueDate <= today) {
+        alert("Termin musi być pusty lub przypadać w przyszłości");
+        return;
+      }
 
       this.addTask(new Task(name, due));
     });
