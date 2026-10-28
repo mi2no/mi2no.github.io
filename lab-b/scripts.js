@@ -167,6 +167,9 @@ class TODO {
         return;
       }
 
+      this.newTaskForm.elements["name"].value = "";
+      this.newTaskForm.elements["due"].value = "";
+
       this.addTask(new Task(name, due));
     });
 
