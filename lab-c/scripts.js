@@ -76,7 +76,7 @@ function makeDropTarget(element, canAccept) {
 function checkSolved() {
     const solved = slots.every((slot, i) => slot.firstElementChild?.dataset.index === String(i));
 
-    console.debug("Puzzle solved:", solved);
+    console.log("Puzzle solved:", solved);
 
     if (solved && Notification.permission === "granted")
         new Notification("Puzzle ułożone!", { body: "Wszystkie elementy są na swoim miejscu." });
@@ -134,18 +134,24 @@ document.getElementById("saveButton").addEventListener("click", function() {
     });
 });
 
+const coordinates = document.getElementById("coordinates");
+
 document.getElementById("getLocation").addEventListener("click", function(event) {
     if (! navigator.geolocation) {
-        console.log("No geolocation.");
+        coordinates.textContent = "Przeglądarka nie obsługuje geolokalizacji.";
+        return;
     }
 
     navigator.geolocation.getCurrentPosition(position => {
-        console.log(position);
         let lat = position.coords.latitude;
         let lon = position.coords.longitude;
+        const text = `${lat.toFixed(6)}, ${lon.toFixed(6)}`;
 
+        coordinates.textContent = text;
+        marker.setLatLng([lat, lon]).setPopupContent(`<strong>Moja lokalizacja</strong><br>${text}`);
         map.setView([lat, lon]);
     }, positionError => {
         console.error(positionError);
+        coordinates.textContent = `Nie udało się pobrać lokalizacji: ${positionError.message}`;
     });
 });

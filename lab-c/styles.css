@@ -2,6 +2,7 @@
     --catppuccin-frappe-crust: #232634;
     --catppuccin-frappe-base: #303446;
     --catppuccin-frappe-surface0: #414559;
+    --catppuccin-frappe-text: #c6d0f5;
 
     --piece-width: 150px;
     --piece-height: 100px;
@@ -32,6 +33,10 @@ body {
     box-sizing: content-box; /* ramka nie zmniejsza obszaru mapy */
     width: calc(var(--piece-width) * 4);   /* 600px */
     height: calc(var(--piece-height) * 4); /* 400px */
+}
+
+#coordinates {
+    color: var(--catppuccin-frappe-text);
 }
 
 #rasterMap {
