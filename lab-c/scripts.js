@@ -39,12 +39,58 @@ L.tileLayer.provider('Esri.WorldImagery').addTo(map);
 let marker = L.marker([53.430127, 14.564802]).addTo(map);
 marker.bindPopup("<strong>Hello!</strong><br>This is a popup.");
 
+const ROWS = 4;
+const COLS = 4;
+
 const piecesContainer = document.getElementById("piecesContainer");
+const puzzleBoard = document.getElementById("puzzle");
+
+// Element aktualnie przeciągany przez użytkownika.
+let draggedPiece = null;
+
+// Bez preventDefault() w dragover przeglądarka nie wywoła zdarzenia drop.
+function makeDropTarget(element, canAccept) {
+    element.addEventListener("dragover", event => {
+        if (draggedPiece && canAccept())
+            event.preventDefault();
+    });
+
+    element.addEventListener("drop", event => {
+        event.preventDefault();
+        element.append(draggedPiece);
+    });
+}
+
+function makeDraggable(piece) {
+    piece.draggable = true;
+
+    piece.addEventListener("dragstart", event => {
+        draggedPiece = piece;
+        event.dataTransfer.setData("text/plain", "piece"); // wymagane przez Firefoksa
+    });
+
+    piece.addEventListener("dragend", () => {
+        draggedPiece = null;
+    });
+}
+
+// Na stół można odłożyć zawsze, a na pole planszy tylko gdy jest puste.
+makeDropTarget(piecesContainer, () => true);
+
+const slots = [];
+for (let i = 0; i < ROWS * COLS; ++i) {
+    const slot = document.createElement("div");
+    slot.className = "slot";
+    makeDropTarget(slot, () => slot.childElementCount === 0);
+    slots.push(slot);
+}
+puzzleBoard.append(...slots);
 
 document.getElementById("saveButton").addEventListener("click", function() {
     leafletImage(map, function (err, canvas) {
-        const puzzles = splitCanvas(canvas, 4, 4);
+        const puzzles = splitCanvas(canvas, ROWS, COLS);
 
+        slots.forEach(slot => slot.replaceChildren());
         piecesContainer.replaceChildren();
         puzzles.map(p => {
             const canvas = document.createElement("canvas");
@@ -54,19 +100,12 @@ document.getElementById("saveButton").addEventListener("click", function() {
 
             canvas.getContext("2d").putImageData(p, 0, 0);
 
-            canvas.onpointerdown = event => pointerDown(event); 
+            makeDraggable(canvas);
 
             piecesContainer.append(canvas);
         });
     });
 });
-
-const pointerDown = function(event) {
-    const piece = event.target;
-
-    console.log(event.clientX);
-    console.log(event.clientY);
-};
 
 document.getElementById("getLocation").addEventListener("click", function(event) {
     if (! navigator.geolocation) {

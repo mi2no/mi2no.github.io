@@ -43,11 +43,14 @@ body {
 #piecesContainer {
     min-height: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(var(--piece-width), 1fr));
+    align-content: start;
 
     overflow-y: auto;
     overflow-x: hidden;
 
+    /* stała szerokość, żeby pusty stół nie zwinął się i dało się na niego odłożyć element */
+    width: 100%;
     max-width: 800px;
     margin-inline: auto;
 
@@ -60,4 +63,16 @@ body {
     display: grid;
     grid-template-columns: repeat(4, var(--piece-width));
     grid-template-rows: repeat(4, var(--piece-height));
+}
+
+.slot {
+    /* outline zamiast border, żeby ramka nie zmniejszała pola */
+    outline: 1px dashed var(--catppuccin-frappe-crust);
+    outline-offset: -1px;
+}
+
+#puzzle canvas,
+#piecesContainer canvas {
+    display: block;
+    cursor: grab;
 }
