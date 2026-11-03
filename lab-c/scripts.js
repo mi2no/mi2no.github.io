@@ -68,7 +68,18 @@ function makeDropTarget(element, canAccept) {
     element.addEventListener("drop", event => {
         event.preventDefault();
         element.append(draggedPiece);
+        checkSolved();
     });
+}
+
+// Element jest na swoim miejscu, gdy jego numer zgadza się z numerem pola.
+function checkSolved() {
+    const solved = slots.every((slot, i) => slot.firstElementChild?.dataset.index === String(i));
+
+    console.debug("Puzzle solved:", solved);
+
+    if (solved && Notification.permission === "granted")
+        new Notification("Puzzle ułożone!", { body: "Wszystkie elementy są na swoim miejscu." });
 }
 
 function makeDraggable(piece) {
@@ -97,16 +108,20 @@ for (let i = 0; i < ROWS * COLS; ++i) {
 puzzleBoard.append(...slots);
 
 document.getElementById("saveButton").addEventListener("click", function() {
+    // Przeglądarki pozwalają prosić o zgodę tylko w reakcji na akcję użytkownika.
+    Notification.requestPermission();
+
     leafletImage(map, function (err, canvas) {
         const puzzles = splitCanvas(canvas, ROWS, COLS);
 
         slots.forEach(slot => slot.replaceChildren());
         piecesContainer.replaceChildren();
-        const pieces = puzzles.map(p => {
+        const pieces = puzzles.map((p, i) => {
             const canvas = document.createElement("canvas");
 
             canvas.width = p.width;
             canvas.height = p.height;
+            canvas.dataset.index = i;
 
             canvas.getContext("2d").putImageData(p, 0, 0);
 
