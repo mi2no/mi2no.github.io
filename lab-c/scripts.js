@@ -29,11 +29,21 @@ function splitCanvas(canvas, rows, cols) {
     for (let row = 0; row < rows; ++row)
         for (let col = 0; col < cols; ++col)
             chunks.push(ctx.getImageData(col * chunkWidth, row * chunkHeight, chunkWidth, chunkHeight));
-    
+
     return chunks;
 }
 
-let map = L.map('map').setView([53.430127, 14.564802], 18);
+// Algorytm Fishera-Yatesa, tasuje tablicę w miejscu.
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; --i) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+
+    return array;
+}
+
+let map =L.map('map').setView([53.430127, 14.564802], 18);
 // L.tileLayer.provider('OpenStreetMap.DE').addTo(map);
 L.tileLayer.provider('Esri.WorldImagery').addTo(map);
 let marker = L.marker([53.430127, 14.564802]).addTo(map);
@@ -92,7 +102,7 @@ document.getElementById("saveButton").addEventListener("click", function() {
 
         slots.forEach(slot => slot.replaceChildren());
         piecesContainer.replaceChildren();
-        puzzles.map(p => {
+        const pieces = puzzles.map(p => {
             const canvas = document.createElement("canvas");
 
             canvas.width = p.width;
@@ -102,8 +112,10 @@ document.getElementById("saveButton").addEventListener("click", function() {
 
             makeDraggable(canvas);
 
-            piecesContainer.append(canvas);
+            return canvas;
         });
+
+        piecesContainer.append(...shuffle(pieces));
     });
 });
 
