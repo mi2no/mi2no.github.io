@@ -2,6 +2,9 @@
     --catppuccin-frappe-crust: #232634;
     --catppuccin-frappe-base: #303446;
     --catppuccin-frappe-surface0: #414559;
+
+    --piece-width: 150px;
+    --piece-height: 100px;
 }
 
 * {
@@ -24,8 +27,11 @@ body {
 }
 
 #map {
-    height: 300px;
     border: 1px solid black;
+
+    box-sizing: content-box; /* ramka nie zmniejsza obszaru mapy */
+    width: calc(var(--piece-width) * 4);   /* 600px */
+    height: calc(var(--piece-height) * 4); /* 400px */
 }
 
 #rasterMap {
@@ -48,4 +54,10 @@ body {
     padding: 20px;
 
     background-color: var(--catppuccin-frappe-surface0)
+}
+
+#puzzle {
+    display: grid;
+    grid-template-columns: repeat(4, var(--piece-width));
+    grid-template-rows: repeat(4, var(--piece-height));
 }

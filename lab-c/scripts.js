@@ -8,7 +8,7 @@
 // Można to jeszcze bardziej upakować, np: 2 bity 
 // na rogi i 3 bity na krawędzie, ale nie miałem
 // już na to siły :3
-function pieceData(rows, cols) {
+/*function pieceData(rows, cols) {
     const bits = rows * cols * 4;
     const count = (bits >> 3) + (bits % 8 != 0); // bytes
     const arr = new Uint8Array(count);
@@ -16,7 +16,7 @@ function pieceData(rows, cols) {
     for (let i = 0; i < 
 
     return arr;
-}
+}*/
 
 function splitCanvas(canvas, rows, cols) {
     const chunks = [];
@@ -26,10 +26,10 @@ function splitCanvas(canvas, rows, cols) {
 
     const ctx = canvas.getContext("2d");
 
-    for (let y = 0; y < canvas.height; y += chunkHeight)
-        for (let x = 0; x < canvas.width; x += chunkWidth)
-            chunks.push(ctx.getImageData(x, y, chunkWidth, chunkHeight));
-
+    for (let row = 0; row < rows; ++row)
+        for (let col = 0; col < cols; ++col)
+            chunks.push(ctx.getImageData(col * chunkWidth, row * chunkHeight, chunkWidth, chunkHeight));
+    
     return chunks;
 }
 
