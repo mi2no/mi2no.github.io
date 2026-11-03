@@ -1,4 +1,22 @@
-console.debug("Hello world!");
+// Ta funkcja zwraca tablicę uint8 z "losowymi"
+// wartościami oznaczającymi kształt elementu.
+// 0 - wejście, 1 - przyłącze
+// Każdy element ma 4 bity określające rodzaj
+// każdego z 4 łączeń. W przypadku rogów
+// i krawędzi, bit określający nieużywane łącze
+// jest ignorowany.
+// Można to jeszcze bardziej upakować, np: 2 bity 
+// na rogi i 3 bity na krawędzie, ale nie miałem
+// już na to siły :3
+function pieceData(rows, cols) {
+    const bits = rows * cols * 4;
+    const count = (bits >> 3) + (bits % 8 != 0); // bytes
+    const arr = new Uint8Array(count);
+
+    for (let i = 0; i < 
+
+    return arr;
+}
 
 function splitCanvas(canvas, rows, cols) {
     const chunks = [];
@@ -36,10 +54,19 @@ document.getElementById("saveButton").addEventListener("click", function() {
 
             canvas.getContext("2d").putImageData(p, 0, 0);
 
+            canvas.onpointerdown = event => pointerDown(event); 
+
             piecesContainer.append(canvas);
         });
     });
 });
+
+const pointerDown = function(event) {
+    const piece = event.target;
+
+    console.log(event.clientX);
+    console.log(event.clientY);
+};
 
 document.getElementById("getLocation").addEventListener("click", function(event) {
     if (! navigator.geolocation) {
