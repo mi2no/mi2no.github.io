@@ -1,9 +1,15 @@
 class Piece {
     constructor(index) {
-        this.shape = [0, 0, 0, 0]; // brzeg układanki zostaje prostą krawędzią
         this.index = index;
+        this.shape = 0;
     }
 }
+/*
+2 bity na łącznik.
+00 - krawędź
+01 - wypustka
+10 - wcięcie
+*/
 
 function pieceConnectorsData(rows, cols) {
     const pieces = [];
@@ -14,21 +20,21 @@ function pieceConnectorsData(rows, cols) {
 
     for (let y = 0; y < rows; ++y) {
         for (let x = 0; x < cols - 1; ++x) {
-            const connector = Math.random() < 0.5 ? 1 : -1;
+            const connector = Math.round(Math.random());
             const i = y * cols + x;
 
-            pieces[i].shape[2] = connector;
-            pieces[i + 1].shape[0] = -connector;
+            pieces[i].shape |= (0b00010000 << connector);
+            pieces[i + 1].shape |= (0b00000010 >> connector);
         }
     }
 
     for (let x = 0; x < cols; ++x) {
         for (let y = 0; y < rows - 1; ++y) {
-            const connector = Math.random() < 0.5 ? 1 : -1;
+            const connector = Math.round(Math.random());
             const i = y * cols + x;
 
-            pieces[i].shape[3] = connector;
-            pieces[i + cols].shape[1] = -connector;
+            pieces[i].shape |= (0b01000000 << connector);
+            pieces[i + cols].shape |= (0b00001000 >> connector);
         }
     }
 
@@ -60,10 +66,14 @@ function piecePath(w, h, t, shape) {
         const midX = x + ux * length / 2 + t;
         const midY = y + uy * length / 2 + t;
 
-        if (shape[side] !== 0) {
+        const shift = side << 1;
+        const mask = 0b11 << shift;
+        const connector = (shape & mask) >> shift;
+
+        if (connector !== 0) {
             // Obrys idzie zgodnie z ruchem wskazówek zegara, więc sweep 1 wyprowadza łuk
             // na zewnątrz (wypustka), a sweep 0 do środka (wcięcie).
-            const sweep = shape[side] === 1 ? 1 : 0;
+            const sweep = connector === 1 ? 1 : 0;
 
             path += ` L${midX - ux * neck} ${midY - uy * neck}`;
             path += ` A${r} ${r} 0 1 ${sweep} ${midX + ux * neck} ${midY + uy * neck}`;
@@ -131,26 +141,32 @@ function fitsNeighbor(piece, side, neighborSlot) {
     if (neighborId === undefined || neighborId === piece.index)
         return true;
 
-    const oppositeSide = (side + 2) % 4;
+    const oppositeSide = (side >> 4) | (side << 4);
 
-    return pieces[neighborId].shape[oppositeSide] === -piece.shape[side];
+    const pieceBits = piece.shape & side;
+    let slotBits = pieces[neighborId].shape & oppositeSide;
+
+    slotBits = (slotBits >> 4) | (slotBits << 4);
+
+    return (slotBits & pieceBits) === 0;
 }
 
 function isSlotValid(piece, slot) {
     const row = Math.floor(slot / COLS);
     const col = slot % COLS;
-    const [left, up, right, down] = piece.shape;
+    const shape = piece.shape;
+    const [left, up, right, down] = [0b11, 0b11 << 2, 0b11 << 4, 0b11 << 6];
 
     // Prosta krawędź musi być na brzegu planszy i tylko tam.
-    if ((col === 0) !== (left === 0)) return false;
-    if ((row === 0) !== (up === 0)) return false;
-    if ((col === COLS - 1) !== (right === 0)) return false;
-    if ((row === ROWS - 1) !== (down === 0)) return false;
+    if ((col === 0) !== ((shape & left) === 0)) return false;
+    if ((row === 0) !== ((shape & up) === 0)) return false;
+    if ((col === COLS - 1) !== ((shape & right) === 0)) return false;
+    if ((row === ROWS - 1) !== ((shape & down) === 0)) return false;
 
-    if (col > 0 && !fitsNeighbor(piece, 0, slot - 1)) return false;
-    if (row > 0 && !fitsNeighbor(piece, 1, slot - COLS)) return false;
-    if (col < COLS - 1 && !fitsNeighbor(piece, 2, slot + 1)) return false;
-    if (row < ROWS - 1 && !fitsNeighbor(piece, 3, slot + COLS)) return false;
+    if (col > 0 && !fitsNeighbor(piece, left, slot - 1)) return false;
+    if (row > 0 && !fitsNeighbor(piece, up, slot - COLS)) return false;
+    if (col < COLS - 1 && !fitsNeighbor(piece, right, slot + 1)) return false;
+    if (row < ROWS - 1 && !fitsNeighbor(piece, down, slot + COLS)) return false;
 
     return true;
 }
