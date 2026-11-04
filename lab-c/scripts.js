@@ -1,27 +1,6 @@
-// Ta funkcja zwraca tablicę uint8 z "losowymi"
-// wartościami oznaczającymi kształt elementu.
-// 0 - wejście, 1 - przyłącze
-// Każdy element ma 4 bity określające rodzaj
-// każdego z 4 łączeń. W przypadku rogów
-// i krawędzi, bit określający nieużywane łącze
-// jest ignorowany.
-// Można to jeszcze bardziej upakować, np: 2 bity 
-// na rogi i 3 bity na krawędzie, ale nie miałem
-// już na to siły :3
-/*function pieceData(rows, cols) {
-    const bits = rows * cols * 4;
-    const count = (bits >> 3) + (bits % 8 != 0); // bytes
-    const arr = new Uint8Array(count);
-
-    for (let i = 0; i < 
-
-    return arr;
-}*/
-
 class Piece {
     constructor(index) {
-        this.connectors = [false, false, false, false];
-        this.shape = null;
+        this.shape = [0, 0, 0, 0]; // brzeg układanki zostaje prostą krawędzią
         this.index = index;
     }
 }
@@ -35,21 +14,21 @@ function pieceConnectorsData(rows, cols) {
 
     for (let y = 0; y < rows; ++y) {
         for (let x = 0; x < cols - 1; ++x) {
-            const connector = Boolean(Math.round(Math.random()));
+            const connector = Math.random() < 0.5 ? 1 : -1;
             const i = y * cols + x;
 
-            pieces[i].connectors[2] = connector;
-            pieces[i + 1].connectors[0] = !connector;
+            pieces[i].shape[2] = connector;
+            pieces[i + 1].shape[0] = -connector;
         }
     }
 
     for (let x = 0; x < cols; ++x) {
         for (let y = 0; y < rows - 1; ++y) {
-            const connector = Boolean(Math.round(Math.random()));
+            const connector = Math.random() < 0.5 ? 1 : -1;
             const i = y * cols + x;
 
-            pieces[i].connectors[3] = connector;
-            pieces[i + cols].connectors[1] = !connector;
+            pieces[i].shape[3] = connector;
+            pieces[i + cols].shape[1] = -connector;
         }
     }
 
@@ -240,14 +219,9 @@ document.getElementById("saveButton").addEventListener("click", function() {
         pieces = pieceConnectorsData(ROWS, COLS);
         placed = new Array(pieces.length);
         
-        const visual = pieces.map(({ index, connectors }) => {
+        const visual = pieces.map(({ index, shape }) => {
             const row = Math.floor(index / COLS);
             const col = index % COLS;
-
-            // Na brzegu układanki nie ma sąsiada, więc krawędź jest prosta.
-            const isBorder = [col === 0, row === 0, col === COLS - 1, row === ROWS - 1];
-            const shape = connectors.map((connector, side) => isBorder[side] ? 0 : (connector ? 1 : -1));
-            pieces[index].shape = shape;
 
             const piece = renderPiece(canvas, row, col, pieceWidth, pieceHeight, TAB_SIZE, shape);
             piece.dataset.index = index;
