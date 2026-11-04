@@ -158,16 +158,23 @@ let draggedPieceId = null;
 let pieces = null; // Tablica z puzzlami
 let placed = null; // Tablicowa reprezentacja układanki
 
+// Ta funckja służy do określenia, czy element może być umieszczony
+// na danym miejscu. Nie weryfikuje, czy układanka została ukończona.
+// Chodzi jedynie o dopasowanie łączeń elementów - żeby łączenia wizualnie
+// na siebie nie nachodziły.
 function isSlotValid(piece, slot) {
     const row = Math.floor(slot / COLS);
     const col = slot % COLS;
     const [left, up, right, down] = [0b11, 0b11 << 2, 0b11 << 4, 0b11 << 6];
 
+    // Weryfikacja po krawędziach
     // Prosta krawędź musi być na brzegu planszy i tylko tam.
     if ((col === 0) !== ((piece.shape & left) === 0)) return false;
     if ((row === 0) !== ((piece.shape & up) === 0)) return false;
     if ((col === COLS - 1) !== ((piece.shape & right) === 0)) return false;
     if ((row === ROWS - 1) !== ((piece.shape & down) === 0)) return false;
+
+    // Weryfikacja po sąsiednich elementach
 
     let mask = 0;
 
@@ -181,7 +188,8 @@ function isSlotValid(piece, slot) {
     if (col < COLS - 1) mask |= shapeAt(slot + 1) & left;
     if (row < ROWS - 1) mask |= shapeAt(slot + COLS) & up;
 
-    mask = (mask >> 4) | (mask << 4);
+    mask = (mask >> 4) | (mask << 4); 
+    // Maska wskazuje teraz na przeciwne łączenia
 
     return (mask & piece.shape) === 0;
 }
