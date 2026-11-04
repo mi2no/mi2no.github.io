@@ -133,42 +133,32 @@ let draggedPieceId = null;
 let pieces = null;
 let placed = null;
 
-// Sprawdza, czy łączenie pasuje do elementu leżącego na sąsiednim polu.
-function fitsNeighbor(piece, side, neighborSlot) {
-    const neighborId = placed[neighborSlot];
-
-    // Puste pole, albo przeciągany element, który wciąż jest zapisany na starym polu.
-    if (neighborId === undefined || neighborId === piece.index)
-        return true;
-
-    const oppositeSide = (side >> 4) | (side << 4);
-
-    const pieceBits = piece.shape & side;
-    let slotBits = pieces[neighborId].shape & oppositeSide;
-
-    slotBits = (slotBits >> 4) | (slotBits << 4);
-
-    return (slotBits & pieceBits) === 0;
-}
-
 function isSlotValid(piece, slot) {
     const row = Math.floor(slot / COLS);
     const col = slot % COLS;
-    const shape = piece.shape;
     const [left, up, right, down] = [0b11, 0b11 << 2, 0b11 << 4, 0b11 << 6];
 
     // Prosta krawędź musi być na brzegu planszy i tylko tam.
-    if ((col === 0) !== ((shape & left) === 0)) return false;
-    if ((row === 0) !== ((shape & up) === 0)) return false;
-    if ((col === COLS - 1) !== ((shape & right) === 0)) return false;
-    if ((row === ROWS - 1) !== ((shape & down) === 0)) return false;
+    if ((col === 0) !== ((piece.shape & left) === 0)) return false;
+    if ((row === 0) !== ((piece.shape & up) === 0)) return false;
+    if ((col === COLS - 1) !== ((piece.shape & right) === 0)) return false;
+    if ((row === ROWS - 1) !== ((piece.shape & down) === 0)) return false;
 
-    if (col > 0 && !fitsNeighbor(piece, left, slot - 1)) return false;
-    if (row > 0 && !fitsNeighbor(piece, up, slot - COLS)) return false;
-    if (col < COLS - 1 && !fitsNeighbor(piece, right, slot + 1)) return false;
-    if (row < ROWS - 1 && !fitsNeighbor(piece, down, slot + COLS)) return false;
+    let mask = 0;
 
-    return true;
+    const shapeAt = neighborSlot => {
+        const id = placed[neighborSlot];
+        return id === undefined || id === piece.idex ? 0 : pieces[id].shape;
+    };
+
+    if (col > 0) mask |= shapeAt(slot - 1) & right;
+    if (row > 0) mask |= shapeAt(slot - COLS) & down;
+    if (col < COLS - 1) mask |= shapeAt(slot + 1) & left;
+    if (row < ROWS - 1) mask |= shapeAt(slot + COLS) & up;
+
+    mask = (mask >> 4) | (mask << 4);
+
+    return (mask & piece.shape) === 0;
 }
 
 // Bez preventDefault() w dragover przeglądarka nie wywoła zdarzenia drop.
