@@ -1,3 +1,8 @@
-*.docx
-*.pdf
-log
+*
+
+!*.html
+!*.css
+!*.js
+
+!*.c
+
