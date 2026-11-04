@@ -18,6 +18,45 @@
     return arr;
 }*/
 
+class Piece {
+    constructor(index) {
+        this.connectors = [false, false, false, false];
+        this.index = index;
+    }
+}
+
+function pieceConnectorsData(rows, cols) {
+    const pieces = [];
+    const size = rows * cols;
+
+    for (let i = 0; i < size; ++i) pieces.push(new Piece(i));
+    // 0 -left, 1 - up, 2 - right, 3 - down
+
+    for (let y = 0; y < rows; ++y) {
+        for (let x = 0; x < cols - 1; ++x) {
+            const connector = Boolean(Math.round(Math.random()));
+            const i = y * cols + x;
+
+            pieces[i].connectors[2] = connector;
+            pieces[i + 1].connectors[0] = !connector;
+        }
+    }
+
+    for (let x = 0; x < cols; ++x) {
+        for (let y = 0; y < rows - 1; ++y) {
+            const connector = Boolean(Math.round(Math.random()));
+            const i = y * cols + x;
+
+            pieces[i].connectors[3] = connector;
+            pieces[i + cols].connectors[1] = !connector;
+        }
+    }
+
+    return pieces;
+}
+
+
+
 function splitCanvas(canvas, rows, cols) {
     const chunks = [];
 
