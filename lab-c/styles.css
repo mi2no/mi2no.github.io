@@ -1,0 +1,201 @@
+/*
+    Styl wygenerowany przez Claude Opus 5.5 (Anthropic)
+*/
+
+:root {
+    --catppuccin-frappe-crust: #232634;
+    --catppuccin-frappe-mantle: #292c3c;
+    --catppuccin-frappe-base: #303446;
+    --catppuccin-frappe-surface0: #414559;
+    --catppuccin-frappe-surface1: #51576d;
+    --catppuccin-frappe-surface2: #626880;
+    --catppuccin-frappe-subtext0: #a5adce;
+    --catppuccin-frappe-text: #c6d0f5;
+    --catppuccin-frappe-blue: #8caaee;
+    --catppuccin-frappe-lavender: #babbf1;
+
+    --piece-width: 150px;
+    --piece-height: 100px;
+
+    --radius: 12px;
+    /* box-shadow zamiast border, żeby ramka nie zmieniała wymiarów mapy i planszy */
+    --panel-frame: 0 0 0 1px var(--catppuccin-frappe-surface1), 0 8px 24px rgb(0 0 0 / 0.3);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--catppuccin-frappe-base);
+    color: var(--catppuccin-frappe-text);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+    margin: 0;
+    padding: 24px;
+    height: 100vh;
+
+    display: grid;
+    grid-template-rows: auto auto minmax(240px, 1fr);
+    gap: 20px;
+}
+
+#upper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 24px;
+}
+
+#map {
+    flex: none;
+    width: calc(var(--piece-width) * 4);   /* 600px */
+    height: calc(var(--piece-height) * 4); /* 400px */
+
+    border-radius: var(--radius);
+    box-shadow: var(--panel-frame);
+
+    isolation: isolate; /* warstwy Leafleta nie wychodzą ponad resztę strony */
+}
+
+#controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+}
+
+button {
+    padding: 10px 20px;
+
+    font: inherit;
+    font-weight: 600;
+
+    color: var(--catppuccin-frappe-text);
+    background-color: var(--catppuccin-frappe-surface0);
+
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+
+    transition: background-color 0.15s, transform 0.1s;
+}
+
+button:hover {
+    background-color: var(--catppuccin-frappe-surface1);
+}
+
+button:active {
+    transform: translateY(1px);
+}
+
+button:focus-visible {
+    outline: 2px solid var(--catppuccin-frappe-lavender);
+    outline-offset: 2px;
+}
+
+#saveButton {
+    color: var(--catppuccin-frappe-crust);
+    background-color: var(--catppuccin-frappe-blue);
+}
+
+#saveButton:hover {
+    background-color: var(--catppuccin-frappe-lavender);
+}
+
+#coordinates {
+    padding: 8px 14px;
+
+    font-family: ui-monospace, Consolas, monospace;
+    font-size: 0.9rem;
+    color: var(--catppuccin-frappe-subtext0);
+
+    background-color: var(--catppuccin-frappe-mantle);
+    border-radius: 8px;
+}
+
+#coordinates:empty {
+    display: none;
+}
+
+#rasterMap {
+    width: 300px;
+    height: 150px;
+    border: 1px solid black;
+}
+
+#piecesContainer {
+    min-height: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(calc(var(--piece-width) + 2 * var(--tab-size)), 1fr));
+    align-content: start;
+    justify-items: center;
+    gap: 8px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    /* stała szerokość, żeby pusty stół nie zwinął się i dało się na niego odłożyć element */
+    width: 100%;
+    max-width: calc(var(--piece-width) * 8 + 24px); /* tyle co mapa i plansza razem */
+    margin-inline: auto;
+
+    padding: 20px;
+
+    background-color: var(--catppuccin-frappe-surface0);
+    background-image: radial-gradient(var(--catppuccin-frappe-surface1) 1px, transparent 1px);
+    background-size: 20px 20px;
+
+    border-radius: var(--radius);
+    box-shadow: var(--panel-frame);
+}
+
+#piecesContainer:empty::before {
+    content: "Stół: kliknij „Pobierz mapę”, aby rozsypać elementy";
+
+    grid-column: 1 / -1;
+    align-self: center;
+    padding-block: 40px;
+
+    color: var(--catppuccin-frappe-subtext0);
+}
+
+#puzzle {
+    flex: none;
+    display: grid;
+    grid-template-columns: repeat(4, var(--piece-width));
+    grid-template-rows: repeat(4, var(--piece-height));
+
+    background-color: var(--catppuccin-frappe-mantle);
+    border-radius: var(--radius);
+    box-shadow: var(--panel-frame);
+}
+
+.slot {
+    /* outline zamiast border, żeby ramka nie zmniejszała pola */
+    outline: 1px dashed var(--catppuccin-frappe-surface2);
+    outline-offset: -1px;
+}
+
+#puzzle canvas,
+#piecesContainer canvas {
+    display: block;
+    cursor: grab;
+    transition: filter 0.15s;
+}
+
+#puzzle canvas:hover,
+#piecesContainer canvas:hover {
+    filter: brightness(1.15);
+}
+
+#puzzle canvas:active,
+#piecesContainer canvas:active {
+    cursor: grabbing;
+}
+
+/* canvas jest większy od pola o margines na wypustki */
+#puzzle canvas {
+    margin: calc(-1 * var(--tab-size));
+}
