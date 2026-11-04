@@ -10,7 +10,7 @@ function pieceConnectorsData(rows, cols) {
     const size = rows * cols;
 
     for (let i = 0; i < size; ++i) pieces.push(new Piece(i));
-    // 0 -left, 1 - up, 2 - right, 3 - down
+    // 0 - left, 1 - up, 2 - right, 3 - down
 
     for (let y = 0; y < rows; ++y) {
         for (let x = 0; x < cols - 1; ++x) {
@@ -43,25 +43,36 @@ function pieceConnectorsData(rows, cols) {
 // boki jak w Piece: 0 - left, 1 - up, 2 - right, 3 - down
 function piecePath(w, h, t, shape) {
     const edges = [
-        { x: 0, y: 0, dx: w,  dy: 0,  nx: 0,  ny: -1, side: 1 },
-        { x: w, y: 0, dx: 0,  dy: h,  nx: 1,  ny: 0,  side: 2 },
-        { x: w, y: h, dx: -w, dy: 0,  nx: 0,  ny: 1,  side: 3 },
-        { x: 0, y: h, dx: 0,  dy: -h, nx: -1, ny: 0,  side: 0 },
+        { x: 0, y: 0, ux: 1,  uy: 0,  length: w, side: 1 },
+        { x: w, y: 0, ux: 0,  uy: 1,  length: h, side: 2 },
+        { x: w, y: h, ux: -1, uy: 0,  length: w, side: 3 },
+        { x: 0, y: h, ux: 0,  uy: -1, length: h, side: 0 },
     ];
 
-    const points = [];
+    // Łącznik to łuk koła o promieniu r, wystający z krawędzi dokładnie na t.
+    // neck to połowa szerokości przewężenia, wynika z tw. Pitagorasa.
+    const r = t * 0.6;
+    const neck = Math.sqrt(2 * r * t - t * t);
 
-    for (const { x, y, dx, dy, nx, ny, side } of edges) {
-        const d = shape[side] * t;
+    let path = `M${t} ${t}`;
 
-        points.push([x, y]);
-        points.push([x + dx * 0.4, y + dy * 0.4]);
-        points.push([x + dx * 0.4 + nx * d, y + dy * 0.4 + ny * d]);
-        points.push([x + dx * 0.6 + nx * d, y + dy * 0.6 + ny * d]);
-        points.push([x + dx * 0.6, y + dy * 0.6]);
+    for (const { x, y, ux, uy, length, side } of edges) {
+        const midX = x + ux * length / 2 + t;
+        const midY = y + uy * length / 2 + t;
+
+        if (shape[side] !== 0) {
+            // Obrys idzie zgodnie z ruchem wskazówek zegara, więc sweep 1 wyprowadza łuk
+            // na zewnątrz (wypustka), a sweep 0 do środka (wcięcie).
+            const sweep = shape[side] === 1 ? 1 : 0;
+
+            path += ` L${midX - ux * neck} ${midY - uy * neck}`;
+            path += ` A${r} ${r} 0 1 ${sweep} ${midX + ux * neck} ${midY + uy * neck}`;
+        }
+
+        path += ` L${x + ux * length + t} ${y + uy * length + t}`;
     }
 
-    return "M" + points.map(([x, y]) => `${x + t} ${y + t}`).join(" L") + " Z";
+    return path + " Z";
 }
 
 function renderPiece(source, row, col, w, h, t, shape) {
@@ -92,14 +103,13 @@ function shuffle(array) {
 }
 
 let map =L.map('map').setView([53.430127, 14.564802], 18);
-// L.tileLayer.provider('OpenStreetMap.DE').addTo(map);
 L.tileLayer.provider('Esri.WorldImagery').addTo(map);
 let marker = L.marker([53.430127, 14.564802]).addTo(map);
 marker.bindPopup("<strong>Hello!</strong><br>This is a popup.");
 
 const ROWS = 4;
 const COLS = 4;
-const TAB_SIZE = 15;
+const TAB_SIZE = 20;
 
 document.documentElement.style.setProperty("--tab-size", `${TAB_SIZE}px`);
 
