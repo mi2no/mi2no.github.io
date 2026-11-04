@@ -185,8 +185,7 @@ function makeDropTarget(element, canAccept, index) {
 
 // Element jest na swoim miejscu, gdy jego numer zgadza się z numerem pola.
 function checkSolved() {
-    //const solved = slots.every((slot, i) => slot.firstElementChild?.dataset.index === String(i));
-    const solved = placed.every((p, i) => p !== undefined && p === i);
+    const solved = placed.every((p, i) => p === i);
 
     console.log("Puzzle solved:", solved);
 
@@ -234,14 +233,13 @@ document.getElementById("saveButton").addEventListener("click", function() {
         
         // Bez tasowania, żeby pieces[i] było elementem o numerze i. Tasowany jest tylko widok.
         pieces = pieceConnectorsData(ROWS, COLS);
-        placed = new Array(pieces.length);
+        placed = new Array(pieces.length).fill(undefined); // every() pomija dziury w tablicy
         
         const visual = pieces.map(({ index, shape }) => {
             const row = Math.floor(index / COLS);
             const col = index % COLS;
 
             const piece = renderPiece(canvas, row, col, pieceWidth, pieceHeight, TAB_SIZE, shape);
-            piece.dataset.index = index;
 
             makeDraggable(piece, index);
 
