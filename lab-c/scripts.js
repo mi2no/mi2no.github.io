@@ -148,7 +148,7 @@ function isSlotValid(piece, slot) {
 
     const shapeAt = neighborSlot => {
         const id = placed[neighborSlot];
-        return id === undefined || id === piece.idex ? 0 : pieces[id].shape;
+        return (id === undefined || id === piece.index) ? 0 : pieces[id].shape;
     };
 
     if (col > 0) mask |= shapeAt(slot - 1) & right;
@@ -185,7 +185,8 @@ function makeDropTarget(element, canAccept, index) {
 
 // Element jest na swoim miejscu, gdy jego numer zgadza się z numerem pola.
 function checkSolved() {
-    const solved = slots.every((slot, i) => slot.firstElementChild?.dataset.index === String(i));
+    //const solved = slots.every((slot, i) => slot.firstElementChild?.dataset.index === String(i));
+    const solved = placed.every((p, i) => p !== undefined && p === i);
 
     console.log("Puzzle solved:", solved);
 
