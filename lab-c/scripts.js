@@ -2,39 +2,60 @@ class Piece {
     constructor(index) {
         this.index = index;
         this.shape = 0;
+
+        /*
+         * .shape określa krawędzie elementu - a dokładniej
+         * typy łączników na tych krawędziach. Są 3 możliwości:
+         * krawędź (brak), wypustka i wcięcie, stąd 2 bity na 
+         * każdy łącznik
+         * 00 - krawędź (brak);
+         * 01 - wyputska;
+         * 10 - wcięcie.
+         * Czyli całość można zakodować na 1 bajcie, ale w js
+         * nie ma jawnego typu uint8, więc jest to trochę 
+         * "na niby".
+         *
+         * Łączniki są kodowane w następującej kolejności:
+         * [lewo, góra, prawo, dół] zaczynając od najmłodszego
+         * bitu - czyli będą zapisane jako (dół|prawo|góra|lewo).
+         * */
     }
 }
-/*
-2 bity na łącznik.
-00 - krawędź
-01 - wypustka
-10 - wcięcie
-*/
 
+// Ta funkcja tworzy tablicę puzzli (typ Piece).
+// Generuje losowe łączenia.
 function pieceConnectorsData(rows, cols) {
     const pieces = [];
     const size = rows * cols;
 
     for (let i = 0; i < size; ++i) pieces.push(new Piece(i));
-    // 0 - left, 1 - up, 2 - right, 3 - down
 
+    // Generowanie łączeń poziomych
     for (let y = 0; y < rows; ++y) {
         for (let x = 0; x < cols - 1; ++x) {
             const connector = Math.round(Math.random());
             const i = y * cols + x;
 
-            pieces[i].shape |= (0b00010000 << connector);
+            pieces[i].shape |= (0b00010000 << connector); 
+            // Maska zakodowuje wypustkę na prawej krawędzi.
+            // Przesunięcie może zamienić ją na wcięcie.
             pieces[i + 1].shape |= (0b00000010 >> connector);
+            // Maska koduje wcięcie na lewej krawędzi.
+            // Przesuwam w drugą stronę, aby zagwarantować
+            // parę (wcięcie-wypustka) na przeciwnych krawędziach.
         }
     }
 
+    // Generowanie łączeń pionowych
     for (let x = 0; x < cols; ++x) {
         for (let y = 0; y < rows - 1; ++y) {
             const connector = Math.round(Math.random());
             const i = y * cols + x;
 
             pieces[i].shape |= (0b01000000 << connector);
+            // Maska koduje wypustkę na dolnej krawędzi.
             pieces[i + cols].shape |= (0b00001000 >> connector);
+            // Maska koduje wcięcie na górnej krawędzi.
         }
     }
 
@@ -45,8 +66,12 @@ function pieceConnectorsData(rows, cols) {
 
 // Zwraca obrys elementu jako ścieżkę SVG, we współrzędnych canvasa
 // (przesuniętych o t, bo canvas ma margines na wypustki).
-// shape[bok]: 1 - wypustka, -1 - wcięcie, 0 - prosta krawędź
-// boki jak w Piece: 0 - left, 1 - up, 2 - right, 3 - down
+// boki jak w Piece: 0 - lewo, 1 - góra, 2 - prawo, 3 - dół
+//
+// Cały ten fragment wygenerowałem z wykorzystaniem Claude'a, chociaż
+// operacje bitowe dodałem sam. Pierwotnie chciałem mieć plik svg wypustki,
+// renderować do konkretnej rozdzielczości względem wymiarów puzzle'a. Ale
+// zrezygnowałem z tego, bo clipPath z css wykorzystuje ścieżkę.
 function piecePath(w, h, t, shape) {
     const edges = [
         { x: 0, y: 0, ux: 1,  uy: 0,  length: w, side: 1 },
@@ -130,8 +155,8 @@ const puzzleBoard = document.getElementById("puzzle");
 let draggedPiece = null;
 let draggedPieceId = null;
 
-let pieces = null;
-let placed = null;
+let pieces = null; // Tablica z puzzlami
+let placed = null; // Tablicowa reprezentacja układanki
 
 function isSlotValid(piece, slot) {
     const row = Math.floor(slot / COLS);
