@@ -57,19 +57,48 @@ function pieceConnectorsData(rows, cols) {
 
 
 
-function splitCanvas(canvas, rows, cols) {
-    const chunks = [];
+// Zwraca obrys elementu jako ścieżkę SVG, we współrzędnych canvasa
+// (przesuniętych o t, bo canvas ma margines na wypustki).
+// shape[bok]: 1 - wypustka, -1 - wcięcie, 0 - prosta krawędź
+// boki jak w Piece: 0 - left, 1 - up, 2 - right, 3 - down
+function piecePath(w, h, t, shape) {
+    const edges = [
+        { x: 0, y: 0, dx: w,  dy: 0,  nx: 0,  ny: -1, side: 1 },
+        { x: w, y: 0, dx: 0,  dy: h,  nx: 1,  ny: 0,  side: 2 },
+        { x: w, y: h, dx: -w, dy: 0,  nx: 0,  ny: 1,  side: 3 },
+        { x: 0, y: h, dx: 0,  dy: -h, nx: -1, ny: 0,  side: 0 },
+    ];
 
-    const chunkWidth = Math.floor(canvas.width / cols);
-    const chunkHeight = Math.floor(canvas.height / rows);
+    const points = [];
+
+    for (const { x, y, dx, dy, nx, ny, side } of edges) {
+        const d = shape[side] * t;
+
+        points.push([x, y]);
+        points.push([x + dx * 0.4, y + dy * 0.4]);
+        points.push([x + dx * 0.4 + nx * d, y + dy * 0.4 + ny * d]);
+        points.push([x + dx * 0.6 + nx * d, y + dy * 0.6 + ny * d]);
+        points.push([x + dx * 0.6, y + dy * 0.6]);
+    }
+
+    return "M" + points.map(([x, y]) => `${x + t} ${y + t}`).join(" L") + " Z";
+}
+
+function renderPiece(source, row, col, w, h, t, shape) {
+    const canvas = document.createElement("canvas");
+    canvas.width = w + 2 * t;
+    canvas.height = h + 2 * t;
+
+    const outline = piecePath(w, h, t, shape);
 
     const ctx = canvas.getContext("2d");
+    ctx.clip(new Path2D(outline));
+    ctx.drawImage(source, t - col * w, t - row * h);
 
-    for (let row = 0; row < rows; ++row)
-        for (let col = 0; col < cols; ++col)
-            chunks.push(ctx.getImageData(col * chunkWidth, row * chunkHeight, chunkWidth, chunkHeight));
+    // Bez tego przezroczyste marginesy łapałyby mysz i zasłaniały sąsiednie elementy.
+    canvas.style.clipPath = `path("${outline}")`;
 
-    return chunks;
+    return canvas;
 }
 
 // Algorytm Fishera-Yatesa, tasuje tablicę w miejscu.
@@ -90,6 +119,9 @@ marker.bindPopup("<strong>Hello!</strong><br>This is a popup.");
 
 const ROWS = 4;
 const COLS = 4;
+const TAB_SIZE = 15;
+
+document.documentElement.style.setProperty("--tab-size", `${TAB_SIZE}px`);
 
 const piecesContainer = document.getElementById("piecesContainer");
 const puzzleBoard = document.getElementById("puzzle");
@@ -151,22 +183,25 @@ document.getElementById("saveButton").addEventListener("click", function() {
     Notification.requestPermission();
 
     leafletImage(map, function (err, canvas) {
-        const puzzles = splitCanvas(canvas, ROWS, COLS);
+        const pieceWidth = Math.floor(canvas.width / COLS);
+        const pieceHeight = Math.floor(canvas.height / ROWS);
 
         slots.forEach(slot => slot.replaceChildren());
         piecesContainer.replaceChildren();
-        const pieces = puzzles.map((p, i) => {
-            const canvas = document.createElement("canvas");
+        const pieces = pieceConnectorsData(ROWS, COLS).map(({ index, connectors }) => {
+            const row = Math.floor(index / COLS);
+            const col = index % COLS;
 
-            canvas.width = p.width;
-            canvas.height = p.height;
-            canvas.dataset.index = i;
+            // Na brzegu układanki nie ma sąsiada, więc krawędź jest prosta.
+            const isBorder = [col === 0, row === 0, col === COLS - 1, row === ROWS - 1];
+            const shape = connectors.map((connector, side) => isBorder[side] ? 0 : (connector ? 1 : -1));
 
-            canvas.getContext("2d").putImageData(p, 0, 0);
+            const piece = renderPiece(canvas, row, col, pieceWidth, pieceHeight, TAB_SIZE, shape);
+            piece.dataset.index = index;
 
-            makeDraggable(canvas);
+            makeDraggable(piece);
 
-            return canvas;
+            return piece;
         });
 
         piecesContainer.append(...shuffle(pieces));
