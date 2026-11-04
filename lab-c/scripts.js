@@ -21,6 +21,7 @@
 class Piece {
     constructor(index) {
         this.connectors = [false, false, false, false];
+        this.shape = null;
         this.index = index;
     }
 }
@@ -128,9 +129,45 @@ const puzzleBoard = document.getElementById("puzzle");
 
 // Element aktualnie przeciągany przez użytkownika.
 let draggedPiece = null;
+let draggedPieceId = null;
+
+let pieces = null;
+let placed = null;
+
+// Sprawdza, czy łączenie pasuje do elementu leżącego na sąsiednim polu.
+function fitsNeighbor(piece, side, neighborSlot) {
+    const neighborId = placed[neighborSlot];
+
+    // Puste pole, albo przeciągany element, który wciąż jest zapisany na starym polu.
+    if (neighborId === undefined || neighborId === piece.index)
+        return true;
+
+    const oppositeSide = (side + 2) % 4;
+
+    return pieces[neighborId].shape[oppositeSide] === -piece.shape[side];
+}
+
+function isSlotValid(piece, slot) {
+    const row = Math.floor(slot / COLS);
+    const col = slot % COLS;
+    const [left, up, right, down] = piece.shape;
+
+    // Prosta krawędź musi być na brzegu planszy i tylko tam.
+    if ((col === 0) !== (left === 0)) return false;
+    if ((row === 0) !== (up === 0)) return false;
+    if ((col === COLS - 1) !== (right === 0)) return false;
+    if ((row === ROWS - 1) !== (down === 0)) return false;
+
+    if (col > 0 && !fitsNeighbor(piece, 0, slot - 1)) return false;
+    if (row > 0 && !fitsNeighbor(piece, 1, slot - COLS)) return false;
+    if (col < COLS - 1 && !fitsNeighbor(piece, 2, slot + 1)) return false;
+    if (row < ROWS - 1 && !fitsNeighbor(piece, 3, slot + COLS)) return false;
+
+    return true;
+}
 
 // Bez preventDefault() w dragover przeglądarka nie wywoła zdarzenia drop.
-function makeDropTarget(element, canAccept) {
+function makeDropTarget(element, canAccept, index) {
     element.addEventListener("dragover", event => {
         if (draggedPiece && canAccept())
             event.preventDefault();
@@ -138,6 +175,14 @@ function makeDropTarget(element, canAccept) {
 
     element.addEventListener("drop", event => {
         event.preventDefault();
+
+        console.log(draggedPieceId, index);
+
+        const previousSlot = placed.indexOf(draggedPieceId);
+        if (previousSlot !== -1) placed[previousSlot] = undefined;
+
+        if (index !== -1) placed[index] = draggedPieceId; // -1 oznacza stół
+
         element.append(draggedPiece);
         checkSolved();
     });
@@ -153,27 +198,29 @@ function checkSolved() {
         new Notification("Puzzle ułożone!", { body: "Wszystkie elementy są na swoim miejscu." });
 }
 
-function makeDraggable(piece) {
+function makeDraggable(piece, index) {
     piece.draggable = true;
 
     piece.addEventListener("dragstart", event => {
         draggedPiece = piece;
+        draggedPieceId = index;
         event.dataTransfer.setData("text/plain", "piece"); // wymagane przez Firefoksa
     });
 
     piece.addEventListener("dragend", () => {
         draggedPiece = null;
+        draggedPieceId = null;
     });
 }
 
-// Na stół można odłożyć zawsze, a na pole planszy tylko gdy jest puste.
-makeDropTarget(piecesContainer, () => true);
+// Na stół można odłożyć zawsze, a na pole planszy tylko gdy jest puste i łączenia pasują.
+makeDropTarget(piecesContainer, () => true, -1);
 
 const slots = [];
 for (let i = 0; i < ROWS * COLS; ++i) {
     const slot = document.createElement("div");
     slot.className = "slot";
-    makeDropTarget(slot, () => slot.childElementCount === 0);
+    makeDropTarget(slot, () => slot.childElementCount === 0 && isSlotValid(pieces[draggedPieceId], i), i);
     slots.push(slot);
 }
 puzzleBoard.append(...slots);
@@ -188,23 +235,29 @@ document.getElementById("saveButton").addEventListener("click", function() {
 
         slots.forEach(slot => slot.replaceChildren());
         piecesContainer.replaceChildren();
-        const pieces = pieceConnectorsData(ROWS, COLS).map(({ index, connectors }) => {
+        
+        // Bez tasowania, żeby pieces[i] było elementem o numerze i. Tasowany jest tylko widok.
+        pieces = pieceConnectorsData(ROWS, COLS);
+        placed = new Array(pieces.length);
+        
+        const visual = pieces.map(({ index, connectors }) => {
             const row = Math.floor(index / COLS);
             const col = index % COLS;
 
             // Na brzegu układanki nie ma sąsiada, więc krawędź jest prosta.
             const isBorder = [col === 0, row === 0, col === COLS - 1, row === ROWS - 1];
             const shape = connectors.map((connector, side) => isBorder[side] ? 0 : (connector ? 1 : -1));
+            pieces[index].shape = shape;
 
             const piece = renderPiece(canvas, row, col, pieceWidth, pieceHeight, TAB_SIZE, shape);
             piece.dataset.index = index;
 
-            makeDraggable(piece);
+            makeDraggable(piece, index);
 
             return piece;
         });
 
-        piecesContainer.append(...shuffle(pieces));
+        piecesContainer.append(...shuffle(visual));
     });
 });
 
