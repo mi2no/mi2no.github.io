@@ -1,3 +1,11 @@
 body {
-  background-color: #e6f1fc;
+    background-color: #e6f1fc;
+    display: grid;
+    grid-template-rows: auto 90%;
+}
+
+section {
+    display: grid;
+    grid-template-columns: 30% auto;
+    grid-gap: 20px;
 }

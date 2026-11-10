@@ -1,6 +1,4 @@
 console.debug("Hello world!");
-const key = "7ded80d91f2b280ec979100cc8bbba94";
-
 async function fetchJSON(url) {
     //try {
         const response = await fetch(url);
@@ -11,6 +9,23 @@ async function fetchJSON(url) {
 }
 
 async function getCityForecast5(cityName) {
-    const url = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${key}`;
+    const url = `https://nm55630.zut.edu.pl/weather_api/forecast?q=${cityName}`;
     return fetchJSON(url);
 }
+
+const xhr = new XMLHttpRequest();
+
+xhr.open('GET', 'https://nm55630.zut.edu.pl/weather_api/weather');
+
+xhr.onload = () => {
+    if (xhr.status >= 200 && xhr.status < 300) {
+        const data = JSON.parse(xhr.responseText);
+        console.log(data);
+    } else {
+        console.error(`HTTP error: ${xhr.status}`);
+    }
+};
+
+xhr.onerror = () => console.error('Network error');
+
+xhr.send();
