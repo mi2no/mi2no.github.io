@@ -31,7 +31,13 @@ $city = $_GET['q'] ?? 'Szczecin';
 $lang = $_GET['lang'] ?? 'pl';
 
 if ($method == 'GET' && ($path == 'weather' || $path == 'forecast')) {
-    $url = "https://api.openweathermap.org/data/2.5/{$path}?q={$city}&lang={$lang}&appid={$OPEN_WEATHER_KEY}";
+    // http_build_query koduje wartości, więc np. "&" w nazwie miasta nie doda własnych parametrów.
+    $query = http_build_query([
+        'q' => $city,
+        'lang' => $lang,
+        'appid' => $OPEN_WEATHER_KEY
+    ]);
+    $url = "https://api.openweathermap.org/data/2.5/{$path}?{$query}";
     $curl = curl_init($url);
 
     curl_setopt_array($curl, [

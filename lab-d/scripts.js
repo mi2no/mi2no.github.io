@@ -35,10 +35,16 @@ function createDayList(data) {
 }
 
 async function getCityForecast5(cityName) {
-    const url = `https://nm55630.zut.edu.pl/weather_api/forecast?q=${cityName}`;
+    const url = `https://nm55630.zut.edu.pl/weather_api/forecast?q=${encodeURIComponent(cityName)}`;
     const response = await fetch(url);
+    const json = await response.json();
 
-    return await response.json();
+    // OpenWeather zwraca przy błędzie np. { cod: "404", message: "city not found" }.
+    if (!response.ok) {
+        throw new Error(json.message ?? `HTTP error: ${response.status}`);
+    }
+
+    return json;
 }
 
 // API bez parametru "units" zwraca temperaturę w kelwinach.
@@ -185,30 +191,46 @@ function updateChart(temperatures) {
 
 const cityInput = document.querySelector("#search-form #city-input");
 const form = document.querySelector("#search-form");
+const errorMessage = document.querySelector("#error-message");
+
+function showError(message) {
+    errorMessage.textContent = `Błąd: ${message}`;
+    errorMessage.hidden = false;
+}
 
 form.onsubmit = event => {
     event.preventDefault();
 
-    const city = cityInput.value;
+    const city = cityInput.value.trim();
+    errorMessage.hidden = true;
 
-    getCityForecast5(city).then(json => {
-        const dailyTemperatures = createDayList(json);
-        renderForecast(dailyTemperatures);
-    })
+    getCityForecast5(city)
+        .then(json => {
+            const dailyTemperatures = createDayList(json);
+            renderForecast(dailyTemperatures);
+        })
+        .catch(error => showError(error.message));
 
     const xhr = new XMLHttpRequest();
 
-    xhr.open('GET', `https://nm55630.zut.edu.pl/weather_api/weather?q=${city}`);
+    xhr.open('GET', `https://nm55630.zut.edu.pl/weather_api/weather?q=${encodeURIComponent(city)}`);
 
     xhr.onload = () => {
+        let data;
+
+        try {
+            data = JSON.parse(xhr.responseText);
+        } catch {
+            data = {};
+        }
+
         if (xhr.status >= 200 && xhr.status < 300) {
-            const data = JSON.parse(xhr.responseText);
             renderCurrent(data);
         } else {
-            console.error(`HTTP error: ${xhr.status}`);
+            showError(data.message ?? `HTTP error: ${xhr.status}`);
         }
     };
 
-    xhr.onerror = () => console.error('Network error');
+    xhr.onerror = () => showError("Network error");
     xhr.send();
 };

@@ -25,6 +25,11 @@ body {
     width: min(100%, 500px);
 }
 
+.error {
+    margin: 0;
+    color: #f38ba8;
+}
+
 #city-input {
     flex: 1;
     min-width: 0;
