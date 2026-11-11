@@ -37,7 +37,6 @@ if ($method == 'GET' && ($path == 'weather' || $path == 'forecast')) {
     curl_setopt_array($curl, [
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_HTTPHEADER => [
-            "Authorization: Bearer $apiKey",
             "Accept: application/json"
         ],
         CURLOPT_TIMEOUT => 10
