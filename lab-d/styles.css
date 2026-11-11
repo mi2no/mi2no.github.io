@@ -68,10 +68,47 @@ main {
     gap: 1.5rem;
 }
 
-#chart-container {
-    position: relative;
+#temperature-chart {
+    display: block;
     width: 100%;
-    min-height: 250px;
+    height: auto;
+}
+
+.chart-grid {
+    stroke: #45475a;
+    stroke-width: 1;
+}
+
+.chart-area {
+    fill: #cba6f7;
+    fill-opacity: 0.15;
+}
+
+.chart-line {
+    fill: none;
+    stroke: #cba6f7;
+    stroke-width: 2.5;
+    stroke-linejoin: round;
+}
+
+.chart-point {
+    fill: #1e1e2e;
+    stroke: #cba6f7;
+    stroke-width: 2;
+}
+
+.chart-label {
+    fill: #a6adc8;
+    font-size: 13px;
+}
+
+.chart-label-y {
+    text-anchor: end;
+    dominant-baseline: middle;
+}
+
+.chart-label-x {
+    text-anchor: middle;
 }
 
 #days {
