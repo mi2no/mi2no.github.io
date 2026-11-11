@@ -3,6 +3,7 @@
 !*.html
 !*.css
 !*.js
+!*.php
 
 !lab-*
 
