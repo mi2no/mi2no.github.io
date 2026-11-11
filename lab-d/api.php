@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../../config.php';
 
 $allowedOrigins = [
-    'https://username.github.io',
+    'https://mi2no.github.io',
     'http://localhost:8080'
 ];
 
