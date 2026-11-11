@@ -28,9 +28,10 @@ $method = $_SERVER['REQUEST_METHOD'];
 $path = substr($path, strlen('/weather_api/'));
 
 $city = $_GET['q'] ?? 'Szczecin';
+$lang = $_GET['lang'] ?? 'pl';
 
 if ($method == 'GET' && ($path == 'weather' || $path == 'forecast')) {
-    $url = "https://api.openweathermap.org/data/2.5/{$path}?q={$city}&appid={$OPEN_WEATHER_KEY}";
+    $url = "https://api.openweathermap.org/data/2.5/{$path}?q={$city}&lang={$lang}&appid={$OPEN_WEATHER_KEY}";
     $curl = curl_init($url);
 
     curl_setopt_array($curl, [
