@@ -41,23 +41,6 @@ async function getCityForecast5(cityName) {
     return await response.json();
 }
 
-const xhr = new XMLHttpRequest();
-
-xhr.open('GET', 'https://nm55630.zut.edu.pl/weather_api/weather');
-
-xhr.onload = () => {
-    if (xhr.status >= 200 && xhr.status < 300) {
-        const data = JSON.parse(xhr.responseText);
-        renderCurrent(data);
-    } else {
-        console.error(`HTTP error: ${xhr.status}`);
-    }
-};
-
-xhr.onerror = () => console.error('Network error');
-
-xhr.send();
-
 // API bez parametru "units" zwraca temperaturę w kelwinach.
 function kelvinToCelsius(kelvin) {
     return kelvin - 273.15;
@@ -76,7 +59,11 @@ function renderCurrent(data) {
     document.querySelector("#current-pressure").textContent = `${data.main.pressure} hPa`;
     document.querySelector("#current-humidity").textContent = `${data.main.humidity}%`;
 
-    // TODO: ikonka – kod ikony jest w data.weather[0].icon (np. "04n").
+    
+    const icon = document.querySelector("#current-icon");
+    icon.src = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
+    icon.alt = data.weather[0].description;
+    icon.hidden = false;
 }
 
 function renderForecast(dailyTemperatures) {
@@ -199,7 +186,32 @@ function updateChart(temperatures) {
     });
 }
 
-getCityForecast5('Szczecin').then(json => {
-    const dailyTemperatures = createDayList(json);
-    renderForecast(dailyTemperatures);
-})
+const cityInput = document.querySelector("#search-form #city-input");
+const submit = document.querySelector("#search-form button");
+
+submit.onclick = event => {
+    event.preventDefault();
+
+    const city = cityInput.value;
+
+    getCityForecast5(city).then(json => {
+        const dailyTemperatures = createDayList(json);
+        renderForecast(dailyTemperatures);
+    })
+
+    const xhr = new XMLHttpRequest();
+
+    xhr.open('GET', `https://nm55630.zut.edu.pl/weather_api/weather?q=${city}`);
+
+    xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+            const data = JSON.parse(xhr.responseText);
+            renderCurrent(data);
+        } else {
+            console.error(`HTTP error: ${xhr.status}`);
+        }
+    };
+
+    xhr.onerror = () => console.error('Network error');
+    xhr.send();
+};
