@@ -17,7 +17,7 @@ function createDayList(data) {
 
     for (const entry of data.list) {
         const date = entry.dt_txt.substring(0, 10);
-        const temp = entry.main.temp;
+        const temp = kelvinToCelsius(entry.main.temp);
 
         if (!dailyTemperatures.has(date)) {
             dailyTemperatures.set(date, [{
@@ -48,7 +48,7 @@ xhr.open('GET', 'https://nm55630.zut.edu.pl/weather_api/weather');
 xhr.onload = () => {
     if (xhr.status >= 200 && xhr.status < 300) {
         const data = JSON.parse(xhr.responseText);
-        console.log(data);
+        renderCurrent(data);
     } else {
         console.error(`HTTP error: ${xhr.status}`);
     }
@@ -57,6 +57,27 @@ xhr.onload = () => {
 xhr.onerror = () => console.error('Network error');
 
 xhr.send();
+
+// API bez parametru "units" zwraca temperaturę w kelwinach.
+function kelvinToCelsius(kelvin) {
+    return kelvin - 273.15;
+}
+
+function renderCurrent(data) {
+    const temp = Math.round(kelvinToCelsius(data.main.temp));
+    const feelsLike = Math.round(kelvinToCelsius(data.main.feels_like));
+
+    document.querySelector("#current-city").textContent =
+        `${data.name}, ${data.sys.country}`;
+    document.querySelector("#current-temp").textContent = `${temp}°C`;
+    document.querySelector("#current-description").textContent =
+        data.weather[0].description;
+    document.querySelector("#current-feels-like").textContent = `${feelsLike}°C`;
+    document.querySelector("#current-pressure").textContent = `${data.main.pressure} hPa`;
+    document.querySelector("#current-humidity").textContent = `${data.main.humidity}%`;
+
+    // TODO: ikonka – kod ikony jest w data.weather[0].icon (np. "04n").
+}
 
 function renderForecast(dailyTemperatures) {
     const daysContainer = document.querySelector("#days");

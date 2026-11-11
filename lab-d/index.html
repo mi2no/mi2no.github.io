@@ -16,7 +16,34 @@
 
     <main>
         <section id="current" class="panel">
-            <!-- Aktualna pogoda -->
+            <h2 id="current-city">—</h2>
+
+            <div class="current-main">
+                <div class="current-icon">
+                    <!-- Miejsce na ikonkę pogody -->
+                    <img id="current-icon" alt="" hidden>
+                </div>
+
+                <div>
+                    <p id="current-temp" class="current-temp">--</p>
+                    <p id="current-description" class="current-description"></p>
+                </div>
+            </div>
+
+            <dl class="current-details">
+                <div>
+                    <dt>Feels like</dt>
+                    <dd id="current-feels-like">--</dd>
+                </div>
+                <div>
+                    <dt>Pressure</dt>
+                    <dd id="current-pressure">--</dd>
+                </div>
+                <div>
+                    <dt>Humidity</dt>
+                    <dd id="current-humidity">--</dd>
+                </div>
+            </dl>
         </section>
 
         <section id="forecast" class="panel">
