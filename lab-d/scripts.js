@@ -76,10 +76,7 @@ function renderForecast(dailyTemperatures) {
     days.forEach(([date, temperatures], index) => {
         const button = document.createElement("button");
 
-        button.textContent = new Date(date).toLocaleDateString(
-            "en-GB",
-            { weekday: "short", day: "numeric", month: "short" }
-        );
+        button.textContent = new Date(date).getDate();
 
         button.addEventListener("click", () => {
             document.querySelector("#days .active")

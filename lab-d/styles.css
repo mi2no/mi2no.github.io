@@ -177,6 +177,11 @@ main {
     gap: 0.5rem;
 }
 
+#days button {
+    aspect-ratio: 1;
+    border-radius: 50%;
+}
+
 #days button.active {
     background: #cba6f7;
     color: #1e1e2e;
