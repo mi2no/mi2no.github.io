@@ -184,9 +184,9 @@ function updateChart(temperatures) {
 }
 
 const cityInput = document.querySelector("#search-form #city-input");
-const submit = document.querySelector("#search-form button");
+const form = document.querySelector("#search-form");
 
-submit.onclick = event => {
+form.onsubmit = event => {
     event.preventDefault();
 
     const city = cityInput.value;
