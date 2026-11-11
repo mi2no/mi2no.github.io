@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Michał Nogalski (55630) - AI LAB D</title>
+
+    <link rel="stylesheet" href="styles.css" type="text/css">
+    <script src="scripts.js" defer></script>
+</head>
+<body>
+    <form id="search-form">
+        <input id="city-input" type="text" placeholder="Wprowadź nazwę miasta" required>
+        <button type="submit">Pogoda</button>
+    </form>
+
+    <p id="error-message" class="error" role="alert" hidden></p>
+
+    <main>
+        <section id="current" class="panel">
+            <h2 id="current-city">—</h2>
+
+            <div class="current-main">
+                <div class="current-icon">
+                    <!-- Miejsce na ikonkę pogody -->
+                    <img id="current-icon" alt="" hidden>
+                </div>
+
+                <div>
+                    <p id="current-temp" class="current-temp">--</p>
+                    <p id="current-description" class="current-description"></p>
+                </div>
+            </div>
+
+            <dl class="current-details">
+                <div>
+                    <dt>Odczuwalna</dt>
+                    <dd id="current-feels-like">--</dd>
+                </div>
+                <div>
+                    <dt>Ciśnienie</dt>
+                    <dd id="current-pressure">--</dd>
+                </div>
+                <div>
+                    <dt>Wilgotność</dt>
+                    <dd id="current-humidity">--</dd>
+                </div>
+            </dl>
+        </section>
+
+        <section id="forecast" class="panel">
+            <div id="chart-container">
+                <svg id="temperature-chart" role="img" aria-label="Temperature chart"></svg>
+            </div>
+
+            <div id="days">
+                <!-- Przyciski z datami -->
+            </div>
+        </section>
+    </main>
+</body>
+</html>
