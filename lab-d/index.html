@@ -9,14 +9,25 @@
     <script src="scripts.js" defer></script>
 </head>
 <body>
-    <form>
-        <input type="text" placeholder="Enter city name"/>
+    <form id="search-form">
+        <input id="city-input" type="text" placeholder="Enter city name" required>
+        <button type="submit">Search</button>
     </form>
-    <section>
-        <div>
-        </div>
-        <div>
-        </div>
-    </section>
+
+    <main>
+        <section id="current" class="panel">
+            <!-- Aktualna pogoda -->
+        </section>
+
+        <section id="forecast" class="panel">
+            <div id="chart-container">
+                <canvas id="temperature-chart"></canvas>
+            </div>
+
+            <div id="days">
+                <!-- Przyciski z datami -->
+            </div>
+        </section>
+    </main>
 </body>
 </html>
