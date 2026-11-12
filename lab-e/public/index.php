@@ -44,7 +44,12 @@ switch ($action) {
         break;
     case 'comment-create':
         $controller = new \App\Controller\CommentController();
-        $view = $controller->createAction($_REQUEST['comment'] ?? null, $templating, $router);
+        $view = $controller->createAction(
+            $_REQUEST['comment'] ?? null,
+            isset($_REQUEST['post_id']) ? (int) $_REQUEST['post_id'] : null,
+            $templating,
+            $router
+        );
         break;
     case 'comment-edit':
         if (! ($_REQUEST['id'] ?? null)) {

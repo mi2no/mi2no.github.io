@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Exception\NotFoundException;
+use App\Model\Comment;
 use App\Model\Post;
 use App\Service\Router;
 use App\Service\Templating;
@@ -72,6 +73,7 @@ class PostController
 
         $html = $templating->render('post/show.html.php', [
             'post' => $post,
+            'comments' => Comment::findByPostId($post->getId()),
             'router' => $router,
         ]);
         return $html;

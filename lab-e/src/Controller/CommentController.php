@@ -19,18 +19,21 @@ class CommentController
         return $html;
     }
 
-    public function createAction(?array $requestComment, Templating $templating, Router $router): ?string
+    public function createAction(?array $requestComment, ?int $postId, Templating $templating, Router $router): ?string
     {
         if ($requestComment) {
             $comment = Comment::fromArray($requestComment);
             // @todo missing validation
             $comment->save();
 
-            $path = $router->generatePath('comment-index');
+            // po dodaniu komentarza wracamy do posta, pod którym się pojawił
+            $path = $router->generatePath('post-show', ['id' => $comment->getPostId()]);
             $router->redirect($path);
             return null;
         } else {
             $comment = new Comment();
+            // wstępnie wybrany post, gdy przychodzimy z linku "Add comment" pod postem
+            $comment->setPostId($postId);
         }
 
         $html = $templating->render('comment/create.html.php', [

@@ -119,6 +119,24 @@ class Comment
         return $comments;
     }
 
+    /**
+     * @return Comment[]
+     */
+    public static function findByPostId(int $postId): array
+    {
+        $pdo = self::getPdo();
+        $sql = 'SELECT * FROM comment WHERE post_id = :post_id ORDER BY id ASC';
+        $statement = $pdo->prepare($sql);
+        $statement->execute(['post_id' => $postId]);
+
+        $comments = [];
+        foreach ($statement->fetchAll(\PDO::FETCH_ASSOC) as $commentArray) {
+            $comments[] = self::fromArray($commentArray);
+        }
+
+        return $comments;
+    }
+
     public static function find($id): ?Comment
     {
         $pdo = self::getPdo();
