@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="daa747e1-1243-4886-ab9d-c97c4e485b8f" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings">
+    <execution>
+      <executable />
+    </execution>
+  </component>
+  <component name="DatabaseLocalColorSettings">
+    <colors>
+      <entry key="bc70310d-0ff7-400f-9313-376ede7db454" value="" />
+    </colors>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="3.26124936809532E-8" />
+      <entry key="MS500" value="0.03277674152402257" />
+      <entry key="S2" value="1.0591729695038545" />
+      <entry key="S5" value="4.262588853251388" />
+      <entry key="S10" value="8.36343083688825" />
+      <entry key="S30" value="14.218606599109123" />
+      <entry key="S60" value="16.403660682091804" />
+      <entry key="M2" value="17.645491277228373" />
+      <entry key="M5" value="18.443987458410202" />
+      <entry key="M10" value="18.719565695945533" />
+      <entry key="M15" value="18.812499706020215" />
+      <entry key="M30" value="18.905976666040964" />
+      <entry key="H1" value="18.95291982140531" />
+      <entry key="H2" value="18.976442755863054" />
+      <entry key="H4" value="18.988217085849836" />
+      <entry key="D1" value="18.998035584566114" />
+      <entry key="W1" value="18.99971935461406" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0" />
+      <entry key="S2" value="1.0" />
+      <entry key="S5" value="1.0" />
+      <entry key="S10" value="1.0" />
+      <entry key="S30" value="1.0" />
+      <entry key="S60" value="1.0" />
+      <entry key="M2" value="1.0" />
+      <entry key="M5" value="1.0" />
+      <entry key="M10" value="1.0" />
+      <entry key="M15" value="1.0" />
+      <entry key="M30" value="1.0" />
+      <entry key="H1" value="1.0" />
+      <entry key="H2" value="1.0" />
+      <entry key="H4" value="1.0" />
+      <entry key="D1" value="1.0" />
+      <entry key="W1" value="1.0" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="5.687175725919148E-4" />
+      <entry key="MS500" value="0.22933810224700577" />
+      <entry key="S2" value="1.5717676239822727" />
+      <entry key="S5" value="4.978902658619673" />
+      <entry key="S10" value="9.194298766365801" />
+      <entry key="S30" value="15.152924173787438" />
+      <entry key="S60" value="17.369304754467034" />
+      <entry key="M2" value="18.627898980057903" />
+      <entry key="M5" value="19.436846026230665" />
+      <entry key="M10" value="19.715977114901722" />
+      <entry key="M15" value="19.810103314755924" />
+      <entry key="M30" value="19.90477645989436" />
+      <entry key="H1" value="19.95231921408963" />
+      <entry key="H2" value="19.97614232594218" />
+      <entry key="H4" value="19.98806683929829" />
+      <entry key="D1" value="19.998010539084383" />
+      <entry key="W1" value="19.999715776580565" />
+    </decayedShown>
+  </component>
+  <component name="PhpDebugGeneral" xdebug_debug_port="1875" listening_started="true" zd_debug_port="2020">
+    <xdebug_debug_ports port="1875" />
+  </component>
+  <component name="PhpServers">
+    <servers>
+      <server host="localhost" id="9446868c-35ab-44c4-af14-a043eaf24abe" name="localhost" port="55630" />
+    </servers>
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="$PROJECT_DIR$/../../../../php-8.5/php.exe" />
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 5,
+  "fromUser": false
+}]]></component>
+  <component name="ProjectId" id="3LyyarhHQJqsZ49r83d9GvknrOt" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Database Script.01-post.sql.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "lab-e",
+    "last_opened_file_path": "I:/ai/mi2no.github.io/lab-e/custom-php-framework",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "reference.webide.settings.project.settings.php.debug"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "sqlite"
+    ],
+    "RunConfigurationTargetLRU": [
+      "bc70310d-0ff7-400f-9313-376ede7db454"
+    ]
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="01-post.sql" type="DatabaseScript" editBeforeRun="true" temporary="true" nameIsGenerated="true">
+      <script-file value="$PROJECT_DIR$/sql/01-post.sql" />
+      <script-mode>FILE</script-mode>
+      <data-source id="bc70310d-0ff7-400f-9313-376ede7db454" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Database Script.01-post.sql" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-PS-262.11879.104" />
+        <option value="bundled-php-predefined-a98d8de5180a-9522f28f0b20-com.jetbrains.php.sharedIndexes-PS-262.11879.104" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="daa747e1-1243-4886-ab9d-c97c4e485b8f" name="Changes" comment="" />
+      <created>1794440669359</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1794440669359</updated>
+      <workItem from="1794440670376" duration="2762000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

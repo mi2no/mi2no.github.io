@@ -1,11 +1,4 @@
-*
-
-!*.html
-!*.css
-!*.js
-!*.php
-
-!lab-*
-
-!*.c
+*.docx
+*.pdf
+*.odt
 
