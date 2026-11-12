@@ -26,13 +26,11 @@ class CommentController
             // @todo missing validation
             $comment->save();
 
-            // po dodaniu komentarza wracamy do posta, pod którym się pojawił
             $path = $router->generatePath('post-show', ['id' => $comment->getPostId()]);
             $router->redirect($path);
             return null;
         } else {
             $comment = new Comment();
-            // wstępnie wybrany post, gdy przychodzimy z linku "Add comment" pod postem
             $comment->setPostId($postId);
         }
 
